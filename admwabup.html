@@ -1,0 +1,2597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Wakil Bupati - Agenda & Pengajuan Tamu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0757a6;--navy2:#0b8fd8;--gold:#ffc83d;--gold2:#ffdb70;
+  --cream:#f3f9ff;--white:#ffffff;--gray1:#edf5fb;--gray2:#d4e5f2;--gray3:#6f8ca6;
+  --text:#12324a;--green:#16a765;--green2:#d9f6e8;--red:#e5485d;--red2:#ffe5e9;
+  --yellow:#f47c20;--yellow2:#ffead9;
+  --shadow:0 16px 40px -12px rgba(7,87,166,.25);--radius:20px;--font:'Poppins','Segoe UI','Arial',sans-serif;
+  --shadow-sm:0 6px 20px rgba(7,87,166,.10);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+body{font-family:var(--font);background:linear-gradient(180deg,#eaf6ff 0%,#f7fcff 55%,#ffffff 100%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── TOPBAR ── */
+.topbar{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%);color:var(--white);padding:0 2rem;height:66px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 22px rgba(2,132,199,.28);position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:.75rem;min-width:0}
+.hamburger-btn{display:none;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);color:var(--white);width:38px;height:38px;border-radius:12px;font-size:1.2rem;cursor:pointer;flex-shrink:0;align-items:center;justify-content:center;line-height:1;transition:background .2s var(--ease)}
+.hamburger-btn:hover{background:rgba(255,255,255,.28)}
+.topbar-brand{display:flex;align-items:center;gap:12px;font-size:1.05rem;font-weight:700;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;letter-spacing:.2px}
+.topbar-brand .icon{width:40px;height:40px;background:linear-gradient(135deg,var(--gold) 0%,var(--gold2) 100%);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;box-shadow:0 4px 14px rgba(251,191,36,.45)}
+.topbar-brand span{color:#fff7db;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.user-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:5px 15px;font-size:.82rem;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-logout{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5);color:var(--white);border-radius:11px;padding:6px 14px;cursor:pointer;font-size:.82rem;font-family:var(--font);font-weight:600;transition:all .2s var(--ease);white-space:nowrap}
+.btn-logout:hover{background:var(--white);color:var(--navy)}
+.sidebar-overlay{display:none;position:fixed;top:66px;left:0;right:0;bottom:0;background:rgba(9,35,58,.5);z-index:150}
+.sidebar-overlay.show{display:block}
+
+/* ── SIDEBAR ── */
+.app-layout{display:flex;min-height:calc(100vh - 66px)}
+.sidebar{width:236px;background:linear-gradient(180deg,var(--navy) 0%,#075985 100%);padding:1.5rem 0;flex-shrink:0}
+.nav-section{padding:0 1.25rem .5rem;font-size:.66rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.42);margin-top:1.25rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 1.25rem;color:rgba(255,255,255,.78);cursor:pointer;font-size:.87rem;font-weight:500;transition:all .18s var(--ease);border-left:3px solid transparent;margin:2px 0}
+.nav-item:hover{background:rgba(255,255,255,.12);color:var(--white)}
+.nav-item.active{background:rgba(251,191,36,.22);color:#fff3c4;border-left-color:var(--gold);font-weight:700}
+.nav-item .nav-icon{font-size:1rem;width:20px;text-align:center}
+
+/* ── MAIN ── */
+.main-content{flex:1;padding:2rem;overflow-y:auto}
+.page{display:none}.page.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;border:1px solid rgba(2,132,199,.08)}
+.card-header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%);color:var(--white);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.card-header h2{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:.2px}
+.card-body{padding:1.5rem}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:1.25rem 1.5rem;box-shadow:var(--shadow-sm);border:1px solid rgba(2,132,199,.08);border-top:4px solid var(--gold);display:flex;align-items:center;gap:1rem;transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.stat-card:hover{transform:translateY(-3px) scale(1.01);box-shadow:var(--shadow)}
+.stat-card.green{border-top-color:var(--green)}.stat-card.red{border-top-color:var(--red)}.stat-card.yellow{border-top-color:var(--yellow)}.stat-card.blue{border-top-color:#6366f1}
+.stat-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;color:var(--white)}
+.stat-card.green .stat-icon{background:linear-gradient(135deg,#34d399,var(--green))}.stat-card.red .stat-icon{background:linear-gradient(135deg,#fb7185,var(--red))}.stat-card.yellow .stat-icon{background:linear-gradient(135deg,#fdba74,var(--yellow))}.stat-card.blue .stat-icon{background:linear-gradient(135deg,#818cf8,#6366f1)}
+.stat-num{font-size:1.85rem;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.5px}
+.stat-label{font-size:.75rem;color:var(--gray3);font-weight:600;margin-top:3px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:12px;border:none;cursor:pointer;font-family:var(--font);font-size:.85rem;font-weight:600;transition:all .2s var(--ease);text-decoration:none}
+.btn-primary{background:linear-gradient(120deg,var(--navy),var(--navy2));color:var(--white)}.btn-primary:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 8px 20px rgba(2,132,199,.35)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#4a2e00;font-weight:700}.btn-gold:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:var(--white)}.btn-success:hover{background:#0ea472}
+.btn-danger{background:var(--red);color:var(--white)}.btn-danger:hover{background:#dc2645}
+.btn-warning{background:var(--yellow);color:var(--white)}
+.btn-outline{background:transparent;border:1.5px solid var(--gray2);color:var(--text)}.btn-outline:hover{border-color:var(--navy);color:var(--navy);background:var(--gray1)}
+.btn-sm{padding:5px 12px;font-size:.78rem;border-radius:10px}
+.btn-xs{padding:3px 9px;font-size:.73rem;border-radius:8px}
+
+/* ── FORMS ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:6px}.form-group.full{grid-column:1/-1}
+label{font-size:.8rem;font-weight:600;color:var(--navy)}
+label .req{color:var(--red)}
+input,select,textarea{border:1.5px solid var(--gray2);border-radius:12px;padding:9px 12px;font-family:var(--font);font-size:.88rem;color:var(--text);background:var(--white);transition:border-color .2s var(--ease),box-shadow .2s var(--ease);width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(2,132,199,.16)}
+textarea{resize:vertical;min-height:80px}
+.form-actions{display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--gray1)}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+thead tr{background:linear-gradient(120deg,var(--navy),var(--navy2));color:var(--white)}
+thead th{padding:12px 14px;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--gray1);transition:background .15s var(--ease)}
+tbody tr:nth-child(even){background:rgba(2,132,199,.025)}
+tbody tr:hover{background:rgba(251,191,36,.12)}
+tbody td{padding:11px 14px;vertical-align:middle}
+.table-actions{display:flex;gap:5px;flex-wrap:wrap}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;letter-spacing:.2px}
+.badge-waiting{background:var(--yellow2);color:var(--yellow)}
+.badge-approved{background:var(--green2);color:var(--green)}
+.badge-rejected{background:var(--red2);color:var(--red)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(9,35,58,.55);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:22px;box-shadow:0 26px 76px rgba(3,80,120,.32);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;animation:modalIn .25s var(--ease)}
+.modal.wide{max-width:760px}
+@keyframes modalIn{from{opacity:0;transform:translateY(-16px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%);color:var(--white);padding:1.1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:.95rem}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.8);font-size:1.3rem;cursor:pointer;line-height:1;transition:color .2s var(--ease)}
+.modal-close:hover{color:var(--white)}
+.modal-body{padding:1.5rem}
+
+/* ── TOAST ── */
+#toast-container{position:fixed;top:1rem;right:1rem;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--white);border-radius:14px;box-shadow:0 10px 34px rgba(2,132,199,.22);padding:12px 16px;min-width:280px;max-width:350px;display:flex;align-items:flex-start;gap:10px;border-left:4px solid var(--green);animation:toastIn .3s var(--ease);font-size:.85rem}
+.toast.error{border-left-color:var(--red)}.toast.warning{border-left-color:var(--yellow)}
+.toast-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.toast-msg{color:var(--text);line-height:1.4}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── LOGIN PAGE ── */
+#login-page{min-height:100vh;background:radial-gradient(circle at 15% 20%,#7dd3fc 0%,var(--navy) 45%,#075985 100%);display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden}
+.login-card{background:var(--white);border-radius:26px;box-shadow:0 40px 100px rgba(3,80,120,.38);width:100%;max-width:920px;display:flex;overflow:hidden;min-height:540px;position:relative;z-index:1}
+.login-left{background:linear-gradient(160deg,var(--navy) 0%,#075985 100%);flex:1;padding:3rem;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.login-left::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(251,191,36,.22)}
+.login-left::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:rgba(251,191,36,.14)}
+.login-logo{font-size:3.5rem;margin-bottom:1.5rem}
+.login-title{color:var(--white);font-size:1.85rem;font-weight:800;line-height:1.25;margin-bottom:.75rem;position:relative;z-index:1;letter-spacing:-.3px}
+.login-subtitle{color:rgba(255,255,255,.75);font-size:.92rem;line-height:1.65;position:relative;z-index:1}
+.login-right{flex:1;padding:3rem;display:flex;flex-direction:column;justify-content:center;position:relative}
+.login-admin-btn{position:absolute;top:1.5rem;right:1.5rem}
+.login-mobile-header{display:none}
+.login-tabs{display:flex;margin-bottom:2rem;border-radius:13px;overflow:hidden;border:1.5px solid var(--gray2)}
+.login-tab{flex:1;padding:10px;background:var(--white);color:var(--gray3);border:none;cursor:pointer;font-family:var(--font);font-size:.85rem;font-weight:600;transition:all .2s var(--ease)}
+.login-tab.active{background:var(--navy);color:var(--white)}
+.login-form{min-height:320px;display:flex;flex-direction:column;justify-content:center}
+.login-form>h3{font-size:1.3rem;color:var(--navy);margin-bottom:.3rem;font-weight:800}
+
+/* ── LAPORAN TABS (segmented control, mengikuti gaya login-tabs) ── */
+.laporan-tabs{display:flex;margin-bottom:1.5rem;border-radius:13px;overflow:hidden;border:1.5px solid var(--gray2);max-width:600px}
+.laporan-tab{flex:1;padding:14px 16px;background:var(--white);color:var(--gray3);border:none;cursor:pointer;font-family:var(--font);font-size:.92rem;font-weight:700;transition:all .2s var(--ease)}
+.laporan-tab:hover{background:var(--gray1)}
+.laporan-tab.active{background:var(--navy);color:var(--white)}
+.laporan-tab.active:hover{background:var(--navy)}
+.login-form>p{color:var(--gray3);font-size:.83rem;margin-bottom:1.5rem}
+.input-icon{position:relative}
+.input-icon .ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray3);font-size:.95rem}
+.input-icon input{padding-left:36px}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:var(--white);border:none;border-radius:13px;padding:13px;font-size:.95rem;font-weight:700;font-family:var(--font);cursor:pointer;margin-top:1rem;transition:all .2s var(--ease);letter-spacing:.3px}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(2,132,199,.4)}
+.or-divider{text-align:center;margin:1.25rem 0;font-size:.78rem;color:var(--gray3);display:flex;align-items:center;gap:10px}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--gray2)}
+.login-hint{background:var(--gray1);border-radius:11px;padding:10px 14px;font-size:.78rem;color:var(--gray3);margin-top:1rem}
+.login-hint strong{color:var(--navy)}
+
+/* ── TAMU PAGE ── */
+#tamu-page{min-height:100vh;background:var(--cream)}
+.tamu-header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy2) 100%);color:var(--white);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.tamu-header .brand{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.tamu-hero{background:radial-gradient(circle at 20% 20%,#7dd3fc 0%,var(--navy) 60%);color:var(--white);padding:3rem 2rem;text-align:center}
+.tamu-hero h1{font-size:2rem;margin-bottom:.5rem;font-weight:800;letter-spacing:-.4px}
+.tamu-hero p{color:rgba(255,255,255,.82);max-width:500px;margin:0 auto 2rem}
+.tamu-body{max-width:860px;margin:0 auto;padding:2rem}
+.tamu-tabs{display:flex;margin-bottom:2rem;border-radius:13px;overflow:hidden;border:1.5px solid var(--gray2);background:var(--white)}
+.tamu-tab{flex:1;padding:12px;background:var(--white);color:var(--gray3);border:none;cursor:pointer;font-family:var(--font);font-size:.88rem;font-weight:600;transition:all .2s var(--ease)}
+.tamu-tab.active{background:var(--navy);color:var(--white)}
+.tamu-pane{display:none}.tamu-pane.active{display:block}
+.success-box{background:var(--green2);border:1.5px solid var(--green);border-radius:16px;padding:1.5rem;text-align:center;color:var(--green)}
+.success-box .big{font-size:2.5rem;margin-bottom:.5rem}
+.success-box h3{font-size:1.1rem;margin-bottom:.4rem;font-weight:800}
+.success-box .nomor{background:var(--white);border:1.5px solid var(--green);border-radius:11px;padding:8px 16px;font-weight:800;font-size:1.2rem;display:inline-block;margin:.5rem 0}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--gray3)}
+
+/* ── DASHBOARD: AGENDA MODERN (Hari Ini / Sebelumnya) ── */
+.agenda-modern-section{border:1.5px solid var(--gray2);border-radius:18px;padding:1.1rem 1.25rem;margin-bottom:1.1rem;background:var(--white)}
+.agenda-modern-section:last-child{margin-bottom:0}
+.agenda-modern-section.today{border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+.agenda-modern-section.previous{border-color:var(--yellow)}
+.agenda-modern-title{font-weight:700;font-size:.92rem;color:var(--navy);margin-bottom:.9rem}
+.agenda-modern-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.agenda-modern-card{border:1.5px solid var(--gray2);border-radius:14px;padding:.85rem 1rem;background:var(--cream);transition:border-color .2s var(--ease)}
+.agenda-modern-card:hover{border-color:var(--gold)}
+.agenda-modern-row{display:flex;align-items:flex-start;gap:.5rem;font-size:.84rem;color:var(--text);line-height:1.4}
+.agenda-modern-row + .agenda-modern-row{margin-top:.3rem}
+.agenda-modern-row .ic{flex-shrink:0;width:18px;text-align:center}
+.agenda-modern-empty{text-align:center;color:var(--gray3);font-size:.85rem;padding:1.5rem 0;font-style:italic}
+@media(max-width:600px){.agenda-modern-grid{grid-template-columns:1fr}}
+.empty-state .emoji{font-size:2.5rem;margin-bottom:.5rem}
+.empty-state p{font-size:.88rem}
+
+/* ── AKUN & MODUL MENU (superadmin) ── */
+.modul-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.modul-chk{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1.5px solid var(--gray2);border-radius:11px;cursor:pointer;font-size:.86rem;font-weight:600;color:var(--navy);background:var(--white);transition:border-color .2s var(--ease)}
+.modul-chk:hover{border-color:var(--gold)}
+.modul-chk input{width:18px;height:18px;padding:0;margin:0;flex-shrink:0;accent-color:var(--navy);cursor:pointer}
+.modul-grid.disabled .modul-chk{opacity:.6;cursor:not-allowed;background:var(--gray1)}
+.modul-grid.disabled .modul-chk input{cursor:not-allowed}
+.modul-chip{display:inline-block;background:var(--gray1);color:var(--navy);border-radius:20px;padding:2px 9px;font-size:.72rem;font-weight:700;margin:1px 3px 1px 0;white-space:nowrap}
+.form-hint{font-size:.74rem;color:var(--gray3);font-weight:400}
+.badge-super{background:#dbeafe;color:#0284c7}
+.badge-admin{background:#fef3c7;color:#b45309}
+@media(max-width:600px){.modul-grid{grid-template-columns:1fr}}
+
+/* ── LOADING ── */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:var(--white);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(234,246,255,.92);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.loading-overlay.show{display:flex}
+.loading-spinner{width:40px;height:40px;border:3px solid var(--gray2);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
+
+/* ── DETAIL ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.5rem}
+.detail-item label{font-size:.72rem;color:var(--gray3);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.detail-item p{font-size:.9rem;color:var(--text);margin-top:2px;font-weight:500}
+.detail-item.full{grid-column:1/-1}
+hr.divider{border:none;border-top:1px solid var(--gray1);margin:1rem 0}
+
+/* ── RESPONSIVE: TABLET & MOBILE (≤768px) ── */
+@media(max-width:768px){
+  #login-page{flex-direction:column;gap:1.75rem}
+  #login-page::before{
+    content:'';position:absolute;top:-70px;right:-60px;width:240px;height:240px;
+    border-radius:50%;background:rgba(255,255,255,.1);z-index:0
+  }
+  #login-page::after{
+    content:'';position:absolute;bottom:-90px;left:-70px;width:260px;height:260px;
+    border-radius:50%;background:rgba(255,255,255,.08);z-index:0
+  }
+  .login-left{display:none}
+  .login-card{max-width:380px;min-height:auto}
+  .login-right{padding:2rem 1.5rem}
+  .login-admin-btn{top:1rem;right:1rem}
+  .login-mobile-header{
+    display:flex;flex-direction:column;align-items:center;gap:.85rem;
+    position:relative;z-index:1
+  }
+  .login-mobile-icon{
+    width:64px;height:64px;border-radius:20px;
+    background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.32);
+    display:flex;align-items:center;justify-content:center;font-size:2rem
+  }
+  .login-mobile-title-text{
+    color:var(--white);font-weight:800;font-size:1.2rem;text-align:center;line-height:1.3
+  }
+
+  .topbar{padding:0 .85rem}
+  .hamburger-btn{display:flex}
+  .topbar-brand{font-size:.92rem}
+  .topbar-brand .icon{width:32px;height:32px;font-size:1.05rem}
+  .topbar-brand span{display:none}
+  .user-badge .logout-text{display:inline}
+  .user-badge span:not(.logout-text){display:none}
+  .btn-logout{padding:6px 10px}
+
+  .sidebar{
+    position:fixed;
+    top:66px; left:0; bottom:0;
+    width:250px;
+    transform:translateX(-100%);
+    transition:transform .25s var(--ease);
+    z-index:200;
+    overflow-y:auto;
+    box-shadow:4px 0 24px rgba(3,80,120,.3);
+  }
+  .sidebar.mobile-open{transform:translateX(0)}
+  .app-layout{display:block}
+  .main-content{padding:1rem;width:100%}
+
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
+  .stat-card{padding:1rem;gap:.65rem}
+  .stat-icon{width:40px;height:40px;font-size:1.15rem}
+  .stat-num{font-size:1.4rem}
+  .stat-label{font-size:.68rem}
+
+  .form-grid{grid-template-columns:1fr}
+  .form-grid.cols3{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr;gap:.5rem}
+
+  .card-header{flex-wrap:wrap;gap:.6rem;padding:1rem 1.1rem}
+  .card-header h2{font-size:.92rem}
+  .card-body{padding:1rem}
+
+  .modal, .modal.wide{max-width:100%}
+  .modal-body{padding:1.1rem}
+  .modal-header{padding:1rem 1.1rem;font-size:.88rem}
+
+  table{font-size:.78rem}
+  thead th{padding:9px 10px;font-size:.68rem}
+  tbody td{padding:8px 10px}
+
+  .form-actions{flex-wrap:wrap}
+  .form-actions .btn{flex:1;justify-content:center;min-width:120px}
+
+  #search-agenda{width:100% !important;max-width:100%}
+
+  .tamu-hero{padding:2rem 1.25rem}
+  .tamu-hero h1{font-size:1.5rem}
+  .tamu-hero p{font-size:.85rem}
+  .tamu-body{padding:1.25rem}
+  .tamu-tab{font-size:.78rem;padding:10px 6px}
+  .tamu-header{padding:1.1rem 1.25rem}
+
+  #page-laporan .laporan-flex-row .form-group{max-width:100% !important}
+}
+
+/* ── RESPONSIVE: HP KECIL (≤420px) ── */
+@media(max-width:420px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .login-card{max-width:100%}
+  .login-right{padding:1.5rem 1.1rem}
+  h1{font-size:1.15rem !important}
+  .topbar-brand div:not(.icon){font-size:.85rem}
+  .toast{min-width:0;max-width:calc(100vw - 2rem)}
+  #toast-container{left:1rem;right:1rem}
+  .toast{max-width:100%}
+}
+
+/* ===== TEMA INFOGRAFIS: BIRU / EMAS / HIJAU / ORANYE ===== */
+body{background:linear-gradient(180deg,#edf8ff 0%,#f8fcff 52%,#fff 100%);color:var(--text)}
+.topbar{background:linear-gradient(120deg,#034b92 0%,#087fca 62%,#12a7e8 100%);box-shadow:0 5px 24px rgba(3,75,146,.28)}
+.topbar-brand .icon{background:linear-gradient(135deg,#ffc83d,#ffdc70);box-shadow:0 5px 16px rgba(255,200,61,.35)}
+.user-badge{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
+.btn-logout{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.42)}
+.btn-logout:hover{background:#fff;color:#0757a6}
+.sidebar{background:linear-gradient(180deg,#064f98 0%,#063f79 100%);box-shadow:8px 0 24px rgba(3,75,146,.12)}
+.nav-item.active{background:linear-gradient(90deg,rgba(255,200,61,.24),rgba(255,200,61,.10));color:#ffe08a;border-left-color:#ffc83d}
+.nav-item:hover{background:rgba(255,255,255,.10)}
+.card,.stat-card{border-color:rgba(7,87,166,.10);box-shadow:var(--shadow-sm)}
+.card-header{background:linear-gradient(120deg,#0757a6 0%,#0b8fd8 100%)}
+.stat-card{border-top-color:#ffc83d}
+.stat-card.green{border-top-color:#16a765}.stat-card.red{border-top-color:#e5485d}.stat-card.yellow{border-top-color:#f47c20}.stat-card.blue{border-top-color:#6c4bd9}
+.stat-icon{background:linear-gradient(135deg,#ffdb70,#ffc83d)}
+.stat-card.green .stat-icon{background:linear-gradient(135deg,#32c982,#16a765)}
+.stat-card.red .stat-icon{background:linear-gradient(135deg,#f47b8b,#e5485d)}
+.stat-card.yellow .stat-icon{background:linear-gradient(135deg,#ffad6b,#f47c20)}
+.stat-card.blue .stat-icon{background:linear-gradient(135deg,#8a73e8,#6c4bd9)}
+.stat-num{color:#0757a6}
+.btn-primary,.btn-login{background:linear-gradient(120deg,#0757a6,#0b8fd8)}
+.btn-gold{background:linear-gradient(135deg,#ffc83d,#ffdb70);color:#624500}
+.btn-success{background:#16a765}.btn-warning{background:#f47c20}
+.btn-outline:hover{border-color:#0b8fd8;color:#0757a6;background:#edf8ff}
+input:focus,select:focus,textarea:focus{border-color:#0b8fd8;box-shadow:0 0 0 3px rgba(11,143,216,.14)}
+thead tr{background:linear-gradient(120deg,#0757a6,#0b8fd8)}
+tbody tr:nth-child(even){background:rgba(7,87,166,.025)}
+tbody tr:hover{background:rgba(255,200,61,.12)}
+.badge-approved{background:#d9f6e8;color:#118654}.badge-waiting{background:#ffead9;color:#d96812}
+.login-left{background:linear-gradient(160deg,#0757a6 0%,#063f79 100%)}
+.login-left::before,.login-left::after{background:rgba(255,200,61,.18)}
+.login-tab.active{background:#0757a6}
+.tamu-hero{background:linear-gradient(135deg,#0757a6 0%,#0b8fd8 72%,#12a7e8 100%)}
+.agenda-modern-section.today{border-color:#16a765;box-shadow:0 0 0 3px rgba(22,167,101,.10)}
+.agenda-modern-section.previous{border-color:#f47c20}
+.agenda-modern-card{background:#f3f9ff}
+.agenda-modern-card:hover{border-color:#ffc83d}
+
+/* ===== LOGO PEMKAB HULU SUNGAI UTARA ===== */
+:root{--logo:url("logo-hsu.png")}
+.logo-badge{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;padding:4px 10px;flex-shrink:0;box-shadow:0 4px 14px rgba(3,45,95,.25)}
+.logo-img{width:138px;height:46px;background:var(--logo) center/contain no-repeat}
+.logo-badge.md{padding:8px 14px;border-radius:16px}
+.logo-badge.md .logo-img{width:150px;height:50px}
+.logo-badge.lg{padding:10px 18px;border-radius:18px;margin-bottom:1.5rem;align-self:flex-start;position:relative;z-index:1}
+.logo-badge.lg .logo-img{width:216px;height:72px}
+@media(max-width:600px){.logo-img{width:108px;height:36px}.logo-badge{padding:3px 8px}}
+.topbar .logo-badge{padding:4px 10px}
+.topbar .logo-img{width:123px;height:41px}
+@media(max-width:900px){.topbar .logo-badge{padding:3px 8px}.topbar .logo-img{width:96px;height:32px}}
+@media(max-width:480px){.topbar-brand>div:last-child{display:none}}
+/* ── MENU SIMPAN BUKTI PENGAJUAN ── */
+.success-box .nomor{font-family:'Courier New',Consolas,monospace;font-size:2.2rem;letter-spacing:.35em;padding:8px 14px 8px calc(14px + .35em);cursor:pointer;user-select:all}
+.success-actions{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:1rem}
+.save-wrap{position:relative;display:inline-block}
+.save-menu{position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 8px);min-width:290px;background:#fff;border:1.5px solid var(--gray2);border-radius:14px;box-shadow:0 14px 36px rgba(3,75,146,.22);z-index:30;overflow:hidden;text-align:left}
+.save-menu button{display:flex;align-items:center;justify-content:flex-start;text-align:left;white-space:nowrap;gap:10px;width:100%;padding:12px 16px;border:0;background:#fff;font-family:var(--font);font-size:.86rem;font-weight:600;color:var(--text);cursor:pointer;border-bottom:1px solid var(--gray1)}
+.save-menu button:last-child{border-bottom:0}
+.save-menu button:hover{background:var(--gray1);color:var(--navy)}
+.save-preview{margin-top:1rem;text-align:center}
+.save-preview img{max-width:100%;width:340px;border-radius:12px;border:1.5px solid var(--gray2);box-shadow:0 8px 24px rgba(3,75,146,.15)}
+.save-preview p{font-size:.78rem;margin-top:.5rem;color:var(--text)}
+@media(max-width:480px){.success-box .nomor{font-size:1.8rem}.save-menu{min-width:270px}}
+
+
+/* ── LOGO: TANPA LATAR PUTIH (versi teks putih) ── */
+.logo-badge,.topbar .logo-badge,.logo-badge.md,.logo-badge.lg{background:none;box-shadow:none;border-radius:0;padding:0}
+.logo-img{width:132px;height:42px;filter:drop-shadow(0 2px 5px rgba(0,30,70,.35))}
+.logo-badge.md .logo-img{width:150px;height:48px}
+.logo-badge.lg .logo-img{width:236px;height:76px}
+.topbar .logo-img{width:146px;height:47px}
+.tamu-header .logo-img{width:146px;height:47px}
+.bt-brand .logo-img{width:146px;height:47px}
+.tamu-header .brand>span,.topbar-brand>div:last-child{padding-left:12px;border-left:1.5px solid rgba(255,255,255,.35)}
+@media(min-width:601px){.bt-brand>span{padding-left:12px;border-left:1.5px solid rgba(255,255,255,.35)}}
+@media(max-width:900px){.topbar .logo-img{width:114px;height:37px}}
+@media(max-width:600px){.logo-img{width:104px;height:33px}.logo-badge.md .logo-img{width:128px;height:41px}.logo-badge.lg .logo-img{width:180px;height:58px}.tamu-header .logo-img{width:112px;height:36px}.bt-brand .logo-img{width:114px;height:37px}.tamu-header .brand>span{padding-left:10px}}
+
+/* ===== RAPIKAN LAYOUT: ukuran huruf, jarak, dan keselarasan ===== */
+:root{--topbar-h:62px;--radius:16px}
+body{font-size:14px;line-height:1.5}
+/* Topbar & sidebar */
+.topbar{height:var(--topbar-h);padding:0 1.5rem}
+.topbar-right{gap:.6rem}
+.user-badge{padding:5px 14px;font-size:.8rem;font-weight:500}
+.btn-logout{padding:6px 14px;font-size:.8rem}
+#sel-pimpinan-switch{height:32px;padding:0 12px!important;font-size:.8rem!important;font-weight:500;width:auto!important;min-width:150px;cursor:pointer}
+#sel-pimpinan-switch option{color:#12324a}
+.sidebar-overlay{top:var(--topbar-h)}
+.app-layout{min-height:calc(100vh - var(--topbar-h))}
+.sidebar{width:224px;padding:1rem 0}
+.nav-section{padding:0 1.25rem .4rem;margin-top:1.1rem;font-size:.68rem;letter-spacing:1.2px}
+.nav-section:first-child{margin-top:.25rem}
+.nav-item{padding:9px 1.25rem;gap:12px;font-size:.85rem;margin:1px 0}
+.nav-item .nav-icon{width:22px;font-size:1rem;flex-shrink:0}
+/* Area konten: rata tengah & lebar maksimum agar tidak melebar di layar besar */
+.main-content{padding:1.5rem 1.75rem 2rem;min-width:0}
+.main-content>.page{max-width:1240px;margin-left:auto;margin-right:auto}
+.main-content h1{font-size:1.3rem!important;line-height:1.3;letter-spacing:-.2px}
+.main-content .page>div:first-child>p,.main-content .page>div:first-child>div>p{font-size:.82rem!important;margin-top:2px}
+.main-content .page>div:first-child[style*="margin-bottom"]{margin-bottom:1.1rem!important}
+/* Kartu */
+.card{border-radius:var(--radius)}
+.card+.card,.card[style*="margin-top"]{margin-top:1.25rem!important}
+.card[style*="margin-bottom"]{margin-bottom:1.25rem!important}
+.card-header{padding:.85rem 1.25rem;min-height:54px;gap:1rem}
+.card-header h2{font-size:.95rem;gap:8px}
+.card-header .btn{flex-shrink:0;white-space:nowrap}
+.card-header input[type=text]{height:34px;width:230px;max-width:100%}
+.card-body{padding:1.25rem}
+/* Kartu statistik: empat kolom sejajar, tinggi sama, label tidak terpotong */
+.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-bottom:1.25rem}
+.stat-card{position:relative;overflow:hidden;border-top-width:1px;padding:1rem .95rem 1rem 1rem;gap:.75rem;min-height:84px;border-radius:var(--radius)}
+.stat-card::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:#ffc83d}
+.stat-card.green::before{background:#16a765}.stat-card.red::before{background:#e5485d}
+.stat-card.yellow::before{background:#f47c20}.stat-card.blue::before{background:#6c4bd9}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-icon{width:42px;height:42px;border-radius:12px;font-size:1.2rem}
+.stat-num{font-size:1.7rem}
+.stat-label{font-size:.72rem;margin-top:4px;line-height:1.25}
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Tabel: header terang (tidak menyatu dengan header kartu yang biru) */
+table{font-size:.84rem}
+thead tr{background:#eaf4fc!important;color:var(--navy)}
+thead th{padding:10px 14px;font-size:.72rem;color:#0a4f93;border-bottom:1.5px solid #cfe3f3}
+tbody td{padding:10px 14px;line-height:1.4}
+tbody tr:nth-child(even){background:#fafdff}
+tbody tr:hover{background:rgba(255,200,61,.13)}
+#page-dashboard th:nth-child(4),#page-dashboard td:nth-child(4){text-align:center}
+.table-actions{gap:6px}
+.btn{padding:8px 16px;font-size:.83rem}
+.btn-sm{padding:6px 13px;font-size:.78rem}
+.btn-xs{padding:4px 11px;font-size:.74rem}
+.badge{padding:3px 10px;font-size:.72rem}
+/* Form */
+.form-grid{gap:.9rem 1rem}
+input,select,textarea{font-size:.86rem;padding:8px 12px;border-radius:10px}
+label{font-size:.78rem}
+.form-actions{margin-top:1rem;padding-top:1rem}
+/* Modal */
+.modal{border-radius:18px}
+.modal-header{padding:.9rem 1.25rem;font-size:.92rem}
+.modal-body{padding:1.25rem}
+/* Agenda Hari Ini / Sebelumnya di dashboard */
+.agenda-modern-section{padding:1rem 1.15rem;margin-bottom:1rem;border-radius:14px}
+.agenda-modern-title{font-size:.88rem;margin-bottom:.75rem}
+.agenda-modern-grid{gap:.75rem}
+.agenda-modern-card{padding:.8rem .95rem;border-radius:12px}
+.agenda-modern-row{font-size:.82rem}
+.empty-state{padding:2rem 1rem}
+.empty-state .emoji{font-size:2rem}
+@media(max-width:768px){
+  :root{--topbar-h:58px}
+  .topbar{padding:0 .85rem}
+  .sidebar{top:var(--topbar-h)!important;width:240px}
+  .main-content{padding:1rem}
+  .stats-grid{gap:.7rem}
+  .stat-card{padding:.85rem;min-height:74px;gap:.6rem}
+  .stat-icon{width:38px;height:38px;font-size:1.1rem}
+  .stat-num{font-size:1.35rem}
+  .stat-label{white-space:normal;font-size:.68rem}
+  .card-header{padding:.8rem 1rem;flex-wrap:wrap}
+  .card-header input[type=text]{width:100%!important}
+  thead th{padding:9px 10px}
+  tbody td{padding:8px 10px}
+  #sel-pimpinan-switch{min-width:0;max-width:130px}
+}
+</style>
+<script>window.ADMIN_PAGE={key:"wabup",label:"Wakil Bupati"};</script>
+<script src="config.js"></script>
+<script src="gas-shim.js"></script>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+  <p style="color:var(--navy);font-size:.85rem;font-weight:600" id="loading-msg">Memuat...</p>
+</div>
+<div id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  LOGIN ADMIN (halaman penuh)                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="login-page">
+  <div class="login-mobile-header">
+    <div class="logo-badge md"><div class="logo-img" role="img" aria-label="Logo Pemerintah Kabupaten Hulu Sungai Utara"></div></div>
+    <div class="login-mobile-title-text">Panel Admin Wakil Bupati</div>
+  </div>
+  <div class="login-card">
+    <div class="login-left">
+      <div class="logo-badge lg"><div class="logo-img" role="img" aria-label="Logo Pemerintah Kabupaten Hulu Sungai Utara"></div></div>
+      <h1 class="login-title">Panel Admin Wakil Bupati<br>Agenda &amp; Pengajuan Tamu</h1>
+      <p class="login-subtitle">Kelola agenda pimpinan, pengajuan tamu, laporan, dan akun.</p>
+    </div>
+    <div class="login-right">
+      <div id="tab-admin" class="login-form">
+        <h3>🔐 Masuk sebagai Admin Wakil Bupati</h3>
+        <p>Kelola agenda dan pengajuan tamu</p>
+        <div class="form-group" style="margin-bottom:1.25rem">
+          <label>Username</label>
+          <div class="input-icon">
+            <span class="ico">👤</span>
+            <input type="text" id="admin-user" placeholder="Masukkan username" autocomplete="username"
+              onkeydown="if(event.key==='Enter')doAdminLogin()">
+          </div>
+        </div>
+        <button class="btn-login" onclick="doAdminLogin()" id="btn-admin-login">Masuk</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  ADMIN APP                                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="admin-app" style="display:none">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+      <div class="topbar-brand">
+        <div class="logo-badge"><div class="logo-img" role="img" aria-label="Logo Pemerintah Kabupaten Hulu Sungai Utara"></div></div>
+        <div>Agenda <span>&amp; Pengajuan Tamu</span></div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge" id="pimpinan-badge-static" style="display:none">🏛️ <span id="pimpinan-nama-static">-</span></div>
+      <select id="sel-pimpinan-switch" onchange="onPimpinanSwitch()" style="display:none;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;padding:5px 10px;font-size:.82rem;font-family:var(--font)"></select>
+      <div class="user-badge">👤 <span id="admin-nama">Admin</span></div>
+      <button class="btn-logout" onclick="doLogout()">⬅ <span class="logout-text">Keluar</span></button>
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <div class="app-layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="nav-section">Menu</div>
+      <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
+        <span class="nav-icon">🏠</span> Dashboard
+      </div>
+      <div class="nav-item" data-page="pengajuan" onclick="showPage('pengajuan')">
+        <span class="nav-icon">📋</span> Tamu
+      </div>
+      <div class="nav-item" data-page="agenda" onclick="showPage('agenda')">
+        <span class="nav-icon">📅</span> Agenda
+      </div>
+      <div class="nav-item" data-page="laporan" onclick="showPage('laporan')">
+        <span class="nav-icon">📑</span> Laporan
+      </div>
+      <div class="nav-item" data-page="email" onclick="showPage('email')">
+        <span class="nav-icon">📧</span> Email Kalender
+      </div>
+      <div class="nav-section" id="nav-section-superadmin" style="display:none">Superadmin</div>
+      <div class="nav-item" data-page="akun" id="nav-akun" style="display:none" onclick="showPage('akun')">
+        <span class="nav-icon">👥</span> Akun
+      </div>
+    </nav>
+
+    <div class="main-content">
+
+      <!-- ─── DASHBOARD ─── -->
+      <div class="page active" id="page-dashboard">
+        <div style="margin-bottom:1.5rem">
+          <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Dashboard<span class="pimpinan-context-label" style="color:var(--gold);font-weight:700"></span></h1>
+          <p style="color:var(--gray3);font-size:.85rem">Ringkasan data agenda dan pengajuan tamu</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card yellow">
+            <div class="stat-icon">⏳</div>
+            <div><div class="stat-num" id="stat-menunggu">-</div><div class="stat-label">Menunggu Persetujuan</div></div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">✅</div>
+            <div><div class="stat-num" id="stat-disetujui">-</div><div class="stat-label">Tamu Diterima</div></div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon">📌</div>
+            <div><div class="stat-num" id="stat-agenda-hari-ini">-</div><div class="stat-label">Agenda Hari Ini</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div><div class="stat-num" id="stat-total-agenda">-</div><div class="stat-label">Total Agenda</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="card-header">
+            <h2>⏳ Tamu Menunggu Persetujuan</h2>
+            <button class="btn btn-gold btn-sm" onclick="showPage('pengajuan')">Lihat Semua</button>
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Nama</th><th>No WA</th><th>Keperluan</th><th>Jumlah</th><th>Tgl Masuk</th><th>Aksi</th></tr></thead>
+                <tbody id="tbody-pending">
+                  <tr><td colspan="6"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>📅 Jadwal Agenda Terdekat</h2>
+            <button class="btn btn-gold btn-sm" onclick="showPage('agenda')">Kelola Agenda</button>
+          </div>
+          <div class="card-body" id="dashboard-agenda-modern">
+            <div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div>
+          </div>
+        </div>
+
+        <!-- Google Calendar Settings -->
+        <div class="card" style="margin-top:1.5rem">
+          <div class="card-header">
+            <h2>📅 Pengaturan Google Calendar</h2>
+            <button class="btn btn-gold btn-sm" onclick="syncSemuaAgenda()" id="btn-sync-all">🔄 Sync Semua Agenda</button>
+          </div>
+          <div class="card-body">
+            <p style="font-size:.85rem;color:var(--gray3);margin-bottom:1rem">
+              Setiap agenda yang ditambah, diedit, atau dihapus akan otomatis tersinkron ke Google Calendar yang dipilih di bawah ini.
+            </p>
+            <div style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap">
+              <div class="form-group" style="flex:1;min-width:200px">
+                <label>Pilih Google Calendar Tujuan</label>
+                <select id="sel-calendar" onchange="simpanCalendarId()">
+                  <option value="primary">⏳ Memuat daftar kalender...</option>
+                </select>
+              </div>
+            </div>
+            <p style="font-size:.78rem;color:var(--gray3);margin-top:.75rem" id="cal-status-text">-</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── AGENDA ─── -->
+      <div class="page" id="page-agenda">
+        <div style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+          <div>
+            <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Agenda<span class="pimpinan-context-label" style="color:var(--gold);font-weight:700"></span></h1>
+            <p style="color:var(--gray3);font-size:.85rem">Kelola jadwal dan agenda kunjungan</p>
+          </div>
+          <button class="btn btn-gold" onclick="openModalAddAgenda()">➕ Tambah Agenda</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2>📅 Daftar Agenda</h2>
+            <input type="text" id="search-agenda" placeholder="🔍 Cari agenda..."
+              oninput="filterAgendaTable()"
+              style="font-size:.82rem;padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:white;width:220px">
+          </div>
+          <div class="card-body" style="padding:0">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>#</th><th>Tanggal</th><th>Jam</th><th>Agenda</th><th>Tempat</th><th>Pelaksana</th><th>Pakaian</th><th>Aksi</th></tr>
+                </thead>
+                <tbody id="tbody-agenda">
+                  <tr><td colspan="8"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── EMAIL KALENDER ─── -->
+      <div class="page" id="page-email">
+        <div style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+          <div>
+            <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Email Kalender<span class="pimpinan-context-label" style="color:var(--gold);font-weight:700"></span></h1>
+            <p style="color:var(--gray3);font-size:.85rem">Agenda <strong id="email-pimpinan-name">-</strong> otomatis muncul di Google Calendar email yang ditambahkan</p>
+          </div>
+          <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+            <select id="email-view" onchange="loadEmailKalender()" style="display:none;width:auto;min-width:190px">
+              <option value="current">Tampilkan: pimpinan terpilih</option>
+              <option value="all">Tampilkan: semua pimpinan</option>
+            </select>
+            <button class="btn btn-gold" onclick="openModalEmail()">➕ Tambah Email</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>📧 Daftar Email</h2></div>
+          <div class="card-body" style="padding:0">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>#</th><th>Email</th><th>Berlaku Untuk</th><th>Keterangan</th><th>Ditambahkan</th><th>Aksi</th></tr>
+                </thead>
+                <tbody id="tbody-email">
+                  <tr><td colspan="6"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:.78rem;color:var(--gray3);margin-top:1rem;line-height:1.5">
+          Email yang terdaftar akan menerima undangan Google Calendar untuk setiap agenda baru atau yang diedit.
+          Jika email dihapus, ia dikeluarkan dari agenda mendatang; agenda yang sudah lewat tidak diubah.
+        </p>
+      </div>
+
+      <!-- ─── PENGAJUAN ─── -->
+      <div class="page" id="page-pengajuan">
+        <div style="margin-bottom:1.5rem">
+          <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Pengajuan Tamu<span class="pimpinan-context-label" style="color:var(--gold);font-weight:700"></span></h1>
+          <p style="color:var(--gray3);font-size:.85rem">Kelola dan tindak lanjuti pengajuan kunjungan tamu</p>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="fb-semua" onclick="setPjFilter('semua')">Semua</button>
+          <button class="btn btn-outline btn-sm" id="fb-menunggu" onclick="setPjFilter('Menunggu')">⏳ Menunggu</button>
+          <button class="btn btn-outline btn-sm" id="fb-disetujui" onclick="setPjFilter('Disetujui')">✅ Disetujui</button>
+          <button class="btn btn-outline btn-sm" id="fb-ditolak" onclick="setPjFilter('Ditolak')">❌ Ditolak</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><h2>📋 Daftar Pengajuan</h2></div>
+          <div class="card-body" style="padding:0">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>#</th><th>Nama</th><th>No WA</th><th>Keperluan</th><th>Jumlah</th><th>Tgl Masuk</th><th>Status</th><th>Aksi</th></tr>
+                </thead>
+                <tbody id="tbody-pengajuan">
+                  <tr><td colspan="8"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── LAPORAN (Harian & Bulanan dalam 1 menu) ─── -->
+      <div class="page" id="page-laporan">
+        <div style="margin-bottom:1.5rem">
+          <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Laporan<span class="pimpinan-context-label" style="color:var(--gold);font-weight:700"></span></h1>
+          <p style="color:var(--gray3);font-size:.85rem">Lihat, kirim via WhatsApp, dan export rekap agenda</p>
+        </div>
+
+        <div class="laporan-tabs">
+          <button class="laporan-tab active" id="lap-tab-harian" onclick="switchLaporanTab('harian')">Laporan Harian</button>
+          <button class="laporan-tab" id="lap-tab-bulanan" onclick="switchLaporanTab('bulanan')">Laporan Bulanan</button>
+        </div>
+
+        <!-- ── Pane: Harian ── -->
+        <div id="laporan-pane-harian" class="laporan-pane">
+          <div class="card" style="margin-bottom:1.5rem">
+            <div class="card-body">
+              <div class="laporan-flex-row" style="display:flex;gap:.75rem;align-items:center;margin-bottom:1rem">
+                <div class="form-group" style="flex:1;min-width:0">
+                  <label>Pilih Tanggal</label>
+                  <input type="date" id="lh-tanggal" style="width:100%">
+                </div>
+                <button class="btn btn-primary" onclick="loadLaporanHarian()" style="white-space:nowrap;align-self:flex-end">🔍 Tampilkan</button>
+              </div>
+              <div class="form-group" style="margin-bottom:1rem">
+                <label>Judul Laporan (untuk WA &amp; PDF)</label>
+                <input type="text" id="lh-judul-laporan" placeholder="Contoh: Agenda Wakil Bupati HSU">
+              </div>
+              <div style="display:flex;gap:.75rem">
+                <button class="btn btn-danger" onclick="exportPDFLaporanHarian()" id="btn-pdf-harian" style="flex:1;justify-content:center">
+                  📑 Export ke PDF
+                </button>
+                <button class="btn btn-success" onclick="kirimWALaporanHarian()" id="btn-wa-harian" style="flex:1;justify-content:center">
+                  📤 Kirim WA
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>📋 Rekap Agenda — <span id="lh-judul-tanggal">-</span></h2>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>#</th><th>Jam</th><th>Agenda</th><th>Tempat</th><th>Pelaksana</th><th>Pakaian</th><th>Keterangan</th></tr>
+                  </thead>
+                  <tbody id="tbody-laporan-harian">
+                    <tr><td colspan="7"><div class="empty-state"><div class="emoji">📅</div><p>Pilih tanggal lalu klik Tampilkan.</p></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Pane: Bulanan ── -->
+        <div id="laporan-pane-bulanan" class="laporan-pane" style="display:none">
+          <div class="card" style="margin-bottom:1.5rem">
+            <div class="card-body">
+              <div class="laporan-flex-row" style="display:flex;gap:.75rem;align-items:center;margin-bottom:1rem">
+                <div class="form-group" style="flex:1;min-width:0">
+                  <label>Pilih Bulan</label>
+                  <input type="month" id="lb-bulan" style="width:100%">
+                </div>
+                <button class="btn btn-primary" onclick="loadLaporanBulanan()" style="white-space:nowrap;align-self:flex-end">🔍 Tampilkan</button>
+              </div>
+              <div style="display:flex;gap:.75rem">
+                <button class="btn btn-danger" onclick="exportPDFLaporanBulanan()" id="btn-pdf-bulanan" style="flex:1;justify-content:center">
+                  📑 Export ke PDF
+                </button>
+                <button class="btn btn-success" onclick="exportExcelLaporanBulanan()" id="btn-excel-bulanan" style="flex:1;justify-content:center">
+                  📊 Export ke Excel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>📋 Rekap Agenda — <span id="lb-judul-bulan">-</span></h2>
+              <span style="font-size:.8rem;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px" id="lb-total-count">0 agenda</span>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>#</th><th>Tanggal</th><th>Jam</th><th>Agenda</th><th>Tempat</th><th>Pelaksana</th><th>Pakaian</th></tr>
+                  </thead>
+                  <tbody id="tbody-laporan-bulanan">
+                    <tr><td colspan="7"><div class="empty-state"><div class="emoji">📊</div><p>Pilih bulan lalu klik Tampilkan.</p></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /app-layout -->
+</div><!-- /admin-app -->
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  MODALS                                                -->
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<!-- Modal Email Kalender -->
+<div class="modal-overlay" id="modal-email">
+  <div class="modal">
+    <div class="modal-header">
+      <span>➕ Tambah Email Kalender</span>
+      <button class="modal-close" onclick="closeModal('modal-email')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Alamat Email Google <span class="req">*</span></label>
+          <input type="email" id="email-input" placeholder="nama@gmail.com" autocomplete="off" autocapitalize="none">
+          <span class="form-hint">Gunakan email akun Google agar agenda tampil di Google Calendar-nya.</span>
+        </div>
+        <div class="form-group full" id="email-pimpinan-wrap" style="display:none">
+          <label>Berlaku Untuk <span class="req">*</span></label>
+          <select id="email-pimpinan"></select>
+          <span class="form-hint">Pilih “Semua Pimpinan” agar email ini menerima agenda Bupati, Wakil Bupati, dan Sekda sekaligus.</span>
+        </div>
+        <div class="form-group full">
+          <label>Keterangan</label>
+          <input type="text" id="email-label" placeholder="mis. Ajudan, Protokol, Pimpinan">
+        </div>
+        <div class="form-group full">
+          <label class="modul-chk"><input type="checkbox" id="email-undang" checked> Undang juga ke agenda yang sudah ada (mulai hari ini)</label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="closeModal('modal-email')">Batal</button>
+        <button class="btn btn-gold" onclick="saveEmailForm()" id="btn-save-email">💾 Simpan Email</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agenda -->
+<div class="modal-overlay" id="modal-agenda">
+  <div class="modal wide">
+    <div class="modal-header">
+      <span id="modal-agenda-title">➕ Tambah Agenda</span>
+      <button class="modal-close" onclick="closeModal('modal-agenda')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="agenda-id">
+      <div class="form-grid">
+        <div class="form-group"><label>Tanggal <span class="req">*</span></label><input type="date" id="agenda-tanggal"></div>
+        <div class="form-group">
+          <label>Jam <span class="req">*</span></label>
+          <div style="display:flex;gap:.5rem;align-items:center">
+            <select id="agenda-jam-h" style="flex:1;text-align:center"></select>
+            <span style="font-weight:700;color:var(--navy)">:</span>
+            <select id="agenda-jam-m" style="flex:1;text-align:center"></select>
+          </div>
+        </div>
+        <div class="form-group full"><label>Agenda <span class="req">*</span></label><input type="text" id="agenda-agenda" placeholder="Nama / judul agenda"></div>
+        <div class="form-group"><label>Tempat <span class="req">*</span></label><input type="text" id="agenda-tempat" placeholder="Lokasi kegiatan"></div>
+        <div class="form-group"><label>Pelaksana <span class="req">*</span></label><input type="text" id="agenda-pelaksana" placeholder="Nama pelaksana/unit"></div>
+        <div class="form-group"><label>Pakaian</label><input type="text" id="agenda-pakaian" placeholder="Pakaian Dinas / Bebas"></div>
+        <div class="form-group full"><label>Keterangan</label><textarea id="agenda-keterangan" rows="3" placeholder="Keterangan tambahan"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-outline" onclick="closeModal('modal-agenda')">Batal</button>
+        <button class="btn btn-gold" onclick="saveAgenda()" id="btn-save-agenda">💾 Simpan Agenda</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail Agenda -->
+<div class="modal-overlay" id="modal-detail-agenda">
+  <div class="modal">
+    <div class="modal-header"><span>📅 Detail Agenda</span><button class="modal-close" onclick="closeModal('modal-detail-agenda')">✕</button></div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item"><label>Tanggal</label><p id="da-tanggal">-</p></div>
+        <div class="detail-item"><label>Jam</label><p id="da-jam">-</p></div>
+        <div class="detail-item full"><label>Agenda</label><p id="da-agenda">-</p></div>
+        <div class="detail-item"><label>Tempat</label><p id="da-tempat">-</p></div>
+        <div class="detail-item"><label>Pelaksana</label><p id="da-pelaksana">-</p></div>
+        <div class="detail-item"><label>Pakaian</label><p id="da-pakaian">-</p></div>
+        <div class="detail-item full"><label>Keterangan</label><p id="da-keterangan">-</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pengajuan -->
+<div class="modal-overlay" id="modal-pengajuan">
+  <div class="modal wide">
+    <div class="modal-header"><span>📋 Detail Pengajuan Tamu</span><button class="modal-close" onclick="closeModal('modal-pengajuan')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="pj-id">
+      <div style="background:var(--gray1);border-radius:10px;padding:1rem;margin-bottom:1.25rem">
+        <p style="font-size:.72rem;font-weight:700;color:var(--gray3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem">📌 Informasi Tamu</p>
+        <div class="detail-grid">
+          <div class="detail-item"><label>Nama</label><p id="d-nama">-</p></div>
+          <div class="detail-item"><label>No. WhatsApp</label><p id="d-wa">-</p></div>
+          <div class="detail-item full"><label>Alamat</label><p id="d-alamat">-</p></div>
+          <div class="detail-item full"><label>Keperluan</label><p id="d-keperluan">-</p></div>
+          <div class="detail-item"><label>Jumlah Orang</label><p id="d-jumlah">-</p></div>
+          <div class="detail-item"><label>Tanggal Masuk</label><p id="d-tgl">-</p></div>
+          <div class="detail-item"><label>Status</label><p id="d-status">-</p></div>
+        </div>
+      </div>
+
+      <!-- Form tindak lanjut (hanya tampil jika status Menunggu) -->
+      <div id="tindak-lanjut-section">
+        <p style="font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem">⚙️ Tindak Lanjut</p>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Keputusan <span class="req">*</span></label>
+          <select id="pj-status" onchange="onStatusChange()">
+            <option value="">-- Pilih Keputusan --</option>
+            <option value="Disetujui">✅ Disetujui</option>
+            <option value="Ditolak">❌ Ditolak</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem">
+          <label>Catatan Admin</label>
+          <textarea id="pj-catatan" rows="2" placeholder="Tambahkan catatan (opsional)"></textarea>
+        </div>
+
+        <!-- Isian agenda (muncul jika Disetujui) -->
+        <div id="agenda-from-pj" style="display:none">
+          <hr class="divider">
+          <p style="font-size:.72rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem">📅 Buat Agenda</p>
+          <div class="form-grid">
+            <div class="form-group"><label>Tanggal Kunjungan <span class="req">*</span></label><input type="date" id="pj-tanggal"></div>
+            <div class="form-group">
+              <label>Jam <span class="req">*</span></label>
+              <div style="display:flex;gap:.5rem;align-items:center">
+                <select id="pj-jam-h" style="flex:1;text-align:center"></select>
+                <span style="font-weight:700;color:var(--navy)">:</span>
+                <select id="pj-jam-m" style="flex:1;text-align:center"></select>
+              </div>
+            </div>
+            <div class="form-group full"><label>Judul Agenda <span class="req">*</span></label><input type="text" id="pj-agenda" placeholder="Judul agenda"></div>
+            <div class="form-group"><label>Tempat <span class="req">*</span></label><input type="text" id="pj-tempat" placeholder="Ruangan / lokasi"></div>
+            <div class="form-group"><label>Pelaksana <span class="req">*</span></label><input type="text" id="pj-pelaksana" placeholder="Nama pelaksana/unit"></div>
+            <div class="form-group"><label>Pakaian</label><input type="text" id="pj-pakaian" placeholder="Pakaian Dinas / Bebas"></div>
+            <div class="form-group full"><label>Keterangan</label><textarea id="pj-keterangan" rows="2" placeholder="Keterangan tambahan"></textarea></div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-outline" onclick="closeModal('modal-pengajuan')">Batal</button>
+          <button class="btn btn-gold" onclick="saveTindakLanjut()" id="btn-save-tl">💾 Simpan Keputusan</button>
+        </div>
+      </div>
+
+      <!-- Sudah diproses -->
+      <div id="already-processed" style="display:none">
+        <div style="background:var(--gray1);border-radius:8px;padding:1rem;text-align:center;color:var(--gray3)">
+          <div style="font-size:1.5rem;margin-bottom:.25rem">ℹ️</div>
+          <p style="font-size:.85rem">Pengajuan ini sudah diproses sebelumnya.</p>
+          <p id="catatan-admin-display" style="font-size:.82rem;margin-top:.4rem;color:var(--text)"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<script>
+// ── PEMUAT LIBRARY ON-DEMAND (PDF/Excel dimuat hanya saat diexport) ──
+var _libPromises = {};
+function loadScriptOnce(src){
+  if(!_libPromises[src]){
+    _libPromises[src] = new Promise(function(resolve, reject){
+      var el = document.createElement('script');
+      el.src = src; el.async = true;
+      el.onload = resolve;
+      el.onerror = function(){ delete _libPromises[src]; reject(new Error('Gagal memuat '+src)); };
+      document.head.appendChild(el);
+    });
+  }
+  return _libPromises[src];
+}
+var LIB_PDF = [
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'
+];
+var LIB_XLSX = ['https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'];
+// Muat berurutan (autotable butuh jsPDF), lalu jalankan cb
+function withLibs(urls, cb){
+  showToast('Menyiapkan pustaka export...');
+  urls.reduce(function(p,u){ return p.then(function(){ return loadScriptOnce(u); }); }, Promise.resolve())
+    .then(cb)
+    .catch(function(e){ showToast('Gagal memuat pustaka export. Periksa koneksi internet.','error'); });
+}
+
+// ── PEMANASAN SERVER: Apps Script "tidur" saat lama tidak dipakai; ping
+// ringan saat halaman dibuka agar login tidak menunggu cold-start.
+(function warmUpServer(){
+  try{
+    // Panggilan nyata (bukan sekadar GET): membangunkan server DAN mengisi cache
+    // akun + agenda + pengajuan selagi admin mengetik username.
+    var _hasSess=false; try{ _hasSess=!!sessionStorage.getItem('adm_sess_'+window.ADMIN_PAGE.key); }catch(e){}
+    if(!_hasSess) google.script.run.withSuccessHandler(function(){}).withFailureHandler(function(){}).warm(window.ADMIN_PAGE.key);
+  }catch(e){}
+})();
+
+// ── STATE ─────────────────────────────────────────────────
+var agendaData    = [];
+var pengajuanData = [];
+var agendaSearch  = '';
+var pjFilter      = 'semua';
+var _loadTimer    = null;
+var _dashPrefetch = null;   // data dashboard yang ikut dikirim bersama respons login
+var _calLoadedFor = '';     // pimpinan yang daftar kalendernya sudah dimuat
+
+// ── MULTI-PIMPINAN ───────────────────────────────────────────
+var currentPimpinan   = '';    // 'bupati' | 'wabup' | 'sekda' | 'all'
+var currentRole       = '';
+var isSuperadmin      = false;
+var pimpinanList      = [];    // diisi dari server: [{key,label}, ...]
+var PIMPINAN_LABELS   = {};    // { key: label } untuk lookup cepat
+
+function loadPimpinanList(cb){
+  google.script.run
+    .withSuccessHandler(function(list){
+      pimpinanList = list || [];
+      PIMPINAN_LABELS = {};
+      pimpinanList.forEach(function(p){ PIMPINAN_LABELS[p.key] = p.label; });
+      if(cb) cb();
+    })
+    .withFailureHandler(function(){ if(cb) cb(); })
+    .getPimpinanList();
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function s(v){ return (v === null || v === undefined) ? '' : String(v); }
+function fmtJamWita(jam){ jam=s(jam); return jam ? jam+' WITA' : '-'; }
+
+function fmtDate(d){
+  if(!d) return '-';
+  try{
+    var months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    var p=d.split('-'); return parseInt(p[2])+' '+months[parseInt(p[1])-1]+' '+p[0];
+  }catch(e){ return d; }
+}
+
+function fmtDateLong(d){
+  if(!d) return '-';
+  try{
+    var months=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    var p=d.split('-'); return parseInt(p[2])+' '+months[parseInt(p[1])-1]+' '+p[0];
+  }catch(e){ return d; }
+}
+
+// Format: "Senin, 22 Juni 2026"
+// Menggunakan Date object agar nama hari selalu akurat sesuai kalender.
+function fmtDateWithDay(d){
+  if(!d) return '-';
+  try{
+    var days  =['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    var months=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    var dt = new Date(d + 'T00:00:00');
+    return days[dt.getDay()] + ', ' + dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear();
+  }catch(e){ return fmtDateLong(d); }
+}
+
+function safeWA(wa){
+  // FIX: Sheets bisa kembalikan nomor HP sebagai Number, bukan String
+  return s(wa).replace(/\D/g,'');
+}
+
+// ── BUKA WHATSAPP TANPA TAB BARU ────────────────────────────
+// Di HP: gunakan skema whatsapp:// → langsung buka aplikasi WA yang terinstal
+//         tanpa membuka jendela browser baru.
+// Di Desktop: gunakan wa.me (web WhatsApp).
+// Teknik: <a> element click — tidak diblokir popup blocker, mendukung
+//         custom URL scheme (whatsapp://) yang window.open() tidak bisa.
+function bukaWA(teks){
+  var encoded = encodeURIComponent(teks);
+  var isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+  var url = isMobile
+    ? 'whatsapp://send?text=' + encoded
+    : 'https://wa.me/?text=' + encoded;
+  var a = document.createElement('a');
+  a.href = url;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ document.body.removeChild(a); }, 200);
+}
+
+// ── LOADING ────────────────────────────────────────────────
+function setLoading(v, msg){
+  document.getElementById('loading').classList.toggle('show', v);
+  if(msg) document.getElementById('loading-msg').textContent = msg;
+  clearTimeout(_loadTimer);
+  if(v){ _loadTimer = setTimeout(function(){ document.getElementById('loading').classList.remove('show'); }, 20000); }
+}
+
+// ── TOAST ──────────────────────────────────────────────────
+function showToast(msg, type){
+  var c=document.getElementById('toast-container');
+  var t=document.createElement('div');
+  t.className='toast'+(type==='error'?' error':type==='warning'?' warning':'');
+  var icon=(type==='error'?'❌':type==='warning'?'⚠️':'✅');
+  t.innerHTML='<span class="toast-icon">'+icon+'</span><div class="toast-msg">'+msg+'</div>';
+  c.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='all .3s'; setTimeout(function(){ t.remove(); },300); },3500);
+}
+
+// ── MODAL ──────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ── TIME PICKER 24 JAM ──────────────────────────────────────
+// Generate option jam (00–23) dan menit (00–59) ke elemen <select>
+function initTimePicker(selHId, selMId){
+  var selH=document.getElementById(selHId);
+  var selM=document.getElementById(selMId);
+  if(!selH||!selM) return;
+  if(selH.options.length===0){
+    for(var h=0;h<24;h++){
+      var o=document.createElement('option');
+      o.value=('0'+h).slice(-2); o.text=('0'+h).slice(-2);
+      selH.appendChild(o);
+    }
+  }
+  if(selM.options.length===0){
+    for(var m=0;m<60;m++){
+      var o=document.createElement('option');
+      o.value=('0'+m).slice(-2); o.text=('0'+m).slice(-2);
+      selM.appendChild(o);
+    }
+  }
+}
+// Baca nilai dari dua select → format "HH:mm"
+function getTimePicker(selHId, selMId){
+  var h=document.getElementById(selHId); var m=document.getElementById(selMId);
+  if(!h||!m) return '';
+  return h.value+':'+m.value;
+}
+// Set nilai dua select dari string "HH:mm"
+function setTimePicker(selHId, selMId, val){
+  val=s(val).trim();
+  var parts=val.match(/^(\d{1,2}):(\d{2})/);
+  var h=('0'+(parts?parseInt(parts[1]):0)).slice(-2);
+  var m=('0'+(parts?parseInt(parts[2]):0)).slice(-2);
+  var selH=document.getElementById(selHId); var selM=document.getElementById(selMId);
+  if(selH) selH.value=h;
+  if(selM) selM.value=m;
+}
+
+// ── EMAIL KALENDER ───────────────────────────────────────────
+var emailData = [];
+
+function emailScope(){
+  // Superadmin dapat melihat semua pimpinan sekaligus; lainnya selalu pimpinan sendiri
+  return (isSuperadmin && document.getElementById('email-view').value==='all') ? 'all' : currentPimpinan;
+}
+
+function loadEmailKalender(){
+  document.getElementById('email-view').style.display = isSuperadmin ? '' : 'none';
+  var scope = emailScope();
+  document.getElementById('email-pimpinan-name').textContent = scope==='all' ? 'Semua Pimpinan' : (PIMPINAN_LABELS[currentPimpinan] || '-');
+  if(!scope) return;
+  setLoading(true,'Memuat email kalender...');
+  google.script.run
+    .withSuccessHandler(function(list){
+      setLoading(false);
+      emailData = list || [];
+      renderEmailTable();
+    })
+    .withFailureHandler(function(e){
+      setLoading(false);
+      showToast('Gagal memuat email: '+escHtml(e && e.message),'error');
+    })
+    .getEmailKalender(sessionToken, scope);
+}
+
+function renderEmailTable(){
+  var tb = document.getElementById('tbody-email');
+  if(!emailData.length){
+    tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">📧</div><p>Belum ada email. Klik “Tambah Email” untuk menghubungkan agenda ke Google Calendar.</p></div></td></tr>';
+    return;
+  }
+  tb.innerHTML = emailData.map(function(x, i){
+    var semua = x.pimpinan==='all';
+    // Email "Semua Pimpinan" hanya boleh dihapus superadmin
+    var aksi = (semua && !isSuperadmin)
+      ? '<span class="form-hint">Diatur superadmin</span>'
+      : '<button class="btn btn-danger btn-xs" onclick="hapusEmail('+i+')">🗑️ Hapus</button>';
+    return '<tr>'
+      +'<td>'+(i+1)+'</td>'
+      +'<td><strong>'+escHtml(x.email)+'</strong></td>'
+      +'<td><span class="badge '+(semua?'badge-super':'badge-admin')+'">'+escHtml(semua?'Semua Pimpinan':(PIMPINAN_LABELS[x.pimpinan]||x.pimpinanLabel||x.pimpinan))+'</span></td>'
+      +'<td>'+(escHtml(x.label)||'<span style="color:var(--gray3)">—</span>')+'</td>'
+      +'<td>'+escHtml(x.tanggal)+(x.oleh?' <span class="form-hint">oleh '+escHtml(x.oleh)+'</span>':'')+'</td>'
+      +'<td><div class="table-actions">'+aksi+'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function openModalEmail(){
+  document.getElementById('email-input').value = '';
+  document.getElementById('email-label').value = '';
+  document.getElementById('email-undang').checked = true;
+  var wrap = document.getElementById('email-pimpinan-wrap');
+  wrap.style.display = isSuperadmin ? '' : 'none';
+  if(isSuperadmin){
+    var sel = document.getElementById('email-pimpinan');
+    sel.innerHTML = pimpinanList.map(function(p){ return '<option value="'+escHtml(p.key)+'">'+escHtml(p.label)+'</option>'; }).join('')
+      + '<option value="all">Semua Pimpinan</option>';
+    sel.value = emailScope()==='all' ? 'all' : currentPimpinan;
+  }
+  openModal('modal-email');
+  document.getElementById('email-input').focus();
+}
+
+function saveEmailForm(){
+  var email = document.getElementById('email-input').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast('Masukkan alamat email yang valid.','warning'); return; }
+  var pimpinan = isSuperadmin ? document.getElementById('email-pimpinan').value : currentPimpinan;
+  var btn = document.getElementById('btn-save-email');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+  google.script.run
+    .withSuccessHandler(function(r){
+      btn.disabled = false; btn.innerHTML = '💾 Simpan Email';
+      if(r && r.success){ closeModal('modal-email'); showToast(escHtml(r.message)); loadEmailKalender(); }
+      else showToast(escHtml((r && r.message) || 'Gagal menyimpan email.'),'warning');
+    })
+    .withFailureHandler(function(e){
+      btn.disabled = false; btn.innerHTML = '💾 Simpan Email';
+      showToast('Gagal menyimpan: '+escHtml(e && e.message),'error');
+    })
+    .addEmailKalender(sessionToken, {
+      pimpinan: pimpinan,
+      email: email,
+      label: document.getElementById('email-label').value.trim(),
+      undangSekarang: document.getElementById('email-undang').checked
+    });
+}
+
+function hapusEmail(i){
+  var x = emailData[i]; if(!x) return;
+  var lingkup = x.pimpinan==='all' ? 'agenda mendatang semua pimpinan' : 'agenda mendatang '+(PIMPINAN_LABELS[x.pimpinan]||x.pimpinan);
+  if(!confirm('Hapus email "'+x.email+'"? Email ini juga dikeluarkan dari '+lingkup+'.')) return;
+  setLoading(true,'Menghapus email...');
+  google.script.run
+    .withSuccessHandler(function(r){
+      setLoading(false);
+      if(r && r.success){ showToast(escHtml(r.message)); loadEmailKalender(); }
+      else showToast(escHtml((r && r.message) || 'Gagal menghapus email.'),'warning');
+    })
+    .withFailureHandler(function(e){ setLoading(false); showToast('Gagal menghapus: '+escHtml(e && e.message),'error'); })
+    .deleteEmailKalender(sessionToken, x.pimpinan, x.email);
+}
+
+// ── AKUN & AKSES MODUL MENU ──────────────────────────────────
+var sessionToken    = '';   // token sesi dari server (dipakai untuk fungsi superadmin)
+var currentUsername = '';
+var userModul       = [];   // key modul menu yang boleh diakses akun yang login
+var modulList       = [{key:'dashboard',label:'Dashboard'},{key:'pengajuan',label:'Tamu'},{key:'agenda',label:'Agenda'},{key:'laporan',label:'Laporan'},{key:'email',label:'Email Kalender',default:false}];
+var akunData        = [];
+
+function escHtml(v){
+  return s(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Superadmin: semua menu + Akun. Admin: hanya modul yang ditentukan.
+function canAccessPage(p){
+  if(p==='akun') return isSuperadmin;
+  return isSuperadmin ? true : userModul.indexOf(p) !== -1;
+}
+function applyMenuAccess(){
+  document.querySelectorAll('.nav-item[data-page]').forEach(function(el){
+    el.style.display = canAccessPage(el.getAttribute('data-page')) ? '' : 'none';
+  });
+  document.getElementById('nav-section-superadmin').style.display = isSuperadmin ? '' : 'none';
+}
+function firstAllowedPage(){
+  var order = ['dashboard','pengajuan','agenda','laporan','email','akun'];
+  for(var i=0;i<order.length;i++){ if(canAccessPage(order[i])) return order[i]; }
+  return '';
+}
+
+// ── SIDEBAR (mobile drawer) ──────────────────────────────────
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ── LOGIN ──────────────────────────────────────────────────
+
+// Terapkan hasil login/pemulihan sesi ke UI (dipakai saat login dan saat refresh halaman)
+var SESS_KEY = 'adm_sess_' + window.ADMIN_PAGE.key;
+function applyLoginResult(r){
+        document.getElementById('admin-nama').textContent = r.nama;
+        currentRole      = r.role;
+        isSuperadmin     = !!r.isSuperadmin;
+        sessionToken     = r.token || '';
+        currentUsername  = s(r.username);
+        userModul        = r.modul || [];
+        _dashPrefetch    = (r.dashboard && r.dashboardPimpinan) ? { pimpinan:r.dashboardPimpinan, data:r.dashboard, ts:Date.now() } : null;
+        currentPimpinan  = isSuperadmin ? '' : r.pimpinan; // superadmin memilih sendiri via switcher
+
+        function afterPimpinanReady(){
+          setupPimpinanUI();
+          document.getElementById('login-page').style.display='none';
+          document.getElementById('admin-user').value='';
+          document.getElementById('admin-app').style.display='';
+          applyMenuAccess();
+          var first = firstAllowedPage();
+          if(first){
+            showPage(first);
+          } else {
+            document.querySelectorAll('.page').forEach(function(el){ el.classList.remove('active'); });
+            showToast('Akun ini belum memiliki akses menu apa pun. Hubungi superadmin.','warning');
+          }
+        }
+        if(r.pimpinanList && r.pimpinanList.length){
+          pimpinanList = r.pimpinanList;
+          PIMPINAN_LABELS = {};
+          pimpinanList.forEach(function(p){ PIMPINAN_LABELS[p.key] = p.label; });
+        }
+        if(r.modulList && r.modulList.length) modulList = r.modulList;
+        if(pimpinanList.length) afterPimpinanReady();
+        else loadPimpinanList(afterPimpinanReady);
+        try{ sessionStorage.setItem(SESS_KEY, sessionToken); }catch(e){}
+}
+
+// Refresh halaman: jika token sesi masih ada, pulihkan tanpa login ulang
+(function resumeSession(){
+  var tok=''; try{ tok = sessionStorage.getItem(SESS_KEY) || ''; }catch(e){}
+  if(!tok) return;
+  var lp=document.getElementById('login-page'); lp.style.display='none';
+  setLoading(true,'Memulihkan sesi...');
+  function keLogin(clear){
+    setLoading(false);
+    if(clear){ try{ sessionStorage.removeItem(SESS_KEY); }catch(e){} }
+    lp.style.display='';
+  }
+  google.script.run
+    .withSuccessHandler(function(r){
+      if(r && r.success){ setLoading(false); applyLoginResult(r); }
+      else keLogin(true);
+    })
+    .withFailureHandler(function(){ keLogin(false); })
+    .resumeSesi(tok, window.ADMIN_PAGE.key);
+})();
+
+function doAdminLogin(){
+  var u=document.getElementById('admin-user').value.trim();
+  if(!u){ showToast('Masukkan username.','warning'); return; }
+
+  var btn=document.getElementById('btn-admin-login');
+  btn.innerHTML='<span class="spinner"></span> Memverifikasi...'; btn.disabled=true;
+
+  google.script.run
+    .withSuccessHandler(function(r){
+      btn.innerHTML='Masuk'; btn.disabled=false;
+      if(r && r.success){
+        applyLoginResult(r);
+      } else {
+        showToast((r && r.message)||'Login gagal.','error');
+      }
+    })
+    .withFailureHandler(function(e){
+      btn.innerHTML='Masuk'; btn.disabled=false;
+      showToast('Gagal terhubung ke server: '+(e.message||''),'error');
+    })
+    .login(u, window.ADMIN_PAGE.key);
+}
+
+// ── Siapkan badge/switcher Pimpinan di topbar sesuai role user ──
+function setupPimpinanUI(){
+  var badge  = document.getElementById('pimpinan-badge-static');
+  var badgeT = document.getElementById('pimpinan-nama-static');
+  var sel    = document.getElementById('sel-pimpinan-switch');
+
+  if(isSuperadmin){
+    sel.innerHTML = pimpinanList.map(function(p){ return '<option value="'+p.key+'">'+p.label+'</option>'; }).join('');
+    if(!currentPimpinan) currentPimpinan = pimpinanList.length ? pimpinanList[0].key : '';
+    sel.value = currentPimpinan;
+    sel.style.display='';
+    badge.style.display='none';
+  } else {
+    badgeT.textContent = PIMPINAN_LABELS[currentPimpinan] || currentPimpinan;
+    badge.style.display='';
+    sel.style.display='none';
+  }
+  updatePimpinanPageLabels();
+}
+
+// Dipanggil saat superadmin mengganti pimpinan yang sedang dilihat
+function onPimpinanSwitch(){
+  currentPimpinan = document.getElementById('sel-pimpinan-switch').value;
+  updatePimpinanPageLabels();
+  // Muat ulang data halaman yang sedang aktif untuk pimpinan yang baru dipilih
+  var activePage = document.querySelector('.nav-item.active');
+  var p = activePage ? activePage.getAttribute('data-page') : 'dashboard';
+  if(p==='dashboard') loadDashboard();
+  else if(p==='agenda') loadAgenda();
+  else if(p==='pengajuan') loadPengajuan();
+  else if(p==='laporan'){ initLaporanHarian(); loadCalendarSettingsIfVisible(); }
+  else if(p==='email') loadEmailKalender();
+}
+
+// Perbarui judul halaman agar menunjukkan pimpinan yang sedang aktif
+function updatePimpinanPageLabels(){
+  var label = isSuperadmin ? (PIMPINAN_LABELS[currentPimpinan] || '-') : '';
+  document.querySelectorAll('.pimpinan-context-label').forEach(function(el){
+    el.textContent = label ? ' — ' + label : '';
+  });
+}
+
+function loadCalendarSettingsIfVisible(){ /* no-op helper kept for clarity */ }
+
+function doLogout(){
+  try{ sessionStorage.removeItem(SESS_KEY); }catch(e){}
+  document.getElementById('admin-app').style.display='none';
+  document.getElementById('login-page').style.display='';
+  document.getElementById('admin-user').value='';
+  if(sessionToken){ google.script.run.logout(sessionToken); }
+  sessionToken = ''; currentUsername = ''; userModul = []; akunData = []; emailData = [];
+  _dashPrefetch = null; _calLoadedFor = '';
+  var ev = document.getElementById('email-view'); if(ev) ev.value = 'current';
+  currentPimpinan = ''; currentRole=''; isSuperadmin=false;
+}
+
+// ── PAGE NAVIGATION ────────────────────────────────────────
+function showPage(p){
+  if(!canAccessPage(p)){ showToast('Anda tidak memiliki akses ke menu ini.','warning'); return; }
+  document.querySelectorAll('.page').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+  var pg=document.getElementById('page-'+p);
+  if(pg) pg.classList.add('active');
+  var nav=document.querySelector('.nav-item[data-page="'+p+'"]');
+  if(nav) nav.classList.add('active');
+  if(p==='dashboard') loadDashboard();
+  else if(p==='agenda') loadAgenda();
+  else if(p==='pengajuan') loadPengajuan();
+  else if(p==='laporan') switchLaporanTab('harian');
+  else if(p==='email') loadEmailKalender();
+  closeSidebar(); // tutup drawer menu otomatis di mobile setelah memilih halaman
+  var mc=document.querySelector('.main-content');
+  if(mc) mc.scrollTop = 0;
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────
+// Pemuatan SEQUENTIAL: getAgenda dulu, lalu getPengajuan di dalam callback
+// Dengan try/catch di tiap handler agar loading tidak macet
+// Render dipisah supaya bisa dipakai oleh data bawaan login maupun hasil fetch.
+function renderDashboard(res){
+      res = res || {};
+      try{
+        agendaData = res.agenda || [];
+        document.getElementById('stat-total-agenda').textContent = agendaData.length;
+        document.getElementById('stat-agenda-hari-ini').textContent =
+          agendaData.filter(function(a){ return s(a.tanggal) === todayStr(); }).length;
+        renderDashboardAgendaModern(agendaData);
+      }catch(e){ console.error('Agenda render error:',e); }
+
+      try{
+        pengajuanData = res.pengajuan || [];
+        var menunggu  = pengajuanData.filter(function(d){ return d.status==='Menunggu'; });
+        var disetujui = pengajuanData.filter(function(d){ return d.status==='Disetujui'; });
+        document.getElementById('stat-menunggu').textContent  = menunggu.length;
+        document.getElementById('stat-disetujui').textContent = disetujui.length;
+
+        var tbody=document.getElementById('tbody-pending');
+        if(menunggu.length){
+          tbody.innerHTML=menunggu.slice(0,5).map(function(p){
+            var wa=safeWA(p.noWA);
+            return '<tr>'
+              +'<td><strong>'+s(p.nama)+'</strong></td>'
+              +'<td><a href="https://wa.me/'+wa+'" target="_blank" style="color:var(--green)">'+s(p.noWA)+'</a></td>'
+              +'<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+s(p.keperluan)+'</td>'
+              +'<td style="text-align:center">'+s(p.jumlahOrang)+'</td>'
+              +'<td>'+s(p.tanggalSubmit)+'</td>'
+              +'<td><button class="btn btn-gold btn-xs" onclick="openDetailPengajuan(\''+s(p.id)+'\')">Tinjau</button></td>'
+              +'</tr>';
+          }).join('');
+        } else {
+          tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><div class="emoji">🎉</div><p>Tidak ada pengajuan menunggu.</p></div></td></tr>';
+        }
+      }catch(e){
+        console.error('Pengajuan render error:',e);
+        showToast('Error render pengajuan: '+e.message,'warning');
+      }
+      // Pengaturan kalender dimuat SETELAH data utama tampil (tidak menghambat)
+      loadCalendarSettings();
+}
+
+function loadDashboard(){
+  // Data dashboard sudah ikut terkirim saat login → tampil seketika, tanpa menunggu server lagi.
+  var pf = _dashPrefetch; _dashPrefetch = null;
+  if(pf && pf.pimpinan === currentPimpinan && (Date.now() - pf.ts) < 60000){
+    renderDashboard(pf.data);
+    return;
+  }
+  google.script.run
+    .withSuccessHandler(renderDashboard)
+    .withFailureHandler(function(e){
+      console.error('getDashboardData error:',e);
+      showToast('Gagal memuat dashboard: '+((e&&e.message)||''),'error');
+    })
+    .getDashboardData(currentPimpinan);
+}
+
+// ── DASHBOARD: Kartu modern "Agenda Hari Ini" & "Agenda Sebelumnya" ──
+// Menampilkan agenda untuk tanggal hari ini, dan jika kosong/sebagai
+// pelengkap, agenda pada tanggal LAMPAU terakhir yang punya catatan.
+function renderDashboardAgendaModern(data){
+  var container = document.getElementById('dashboard-agenda-modern');
+  if(!container) return;
+
+  var todayDateStr = todayStr(); // yyyy-MM-dd, fungsi sudah ada (dipakai Laporan Harian)
+
+  // Urutkan seluruh agenda berdasarkan tanggal+jam agar pencarian tanggal
+  // sebelumnya yang paling dekat dengan hari ini akurat.
+  var sorted = (data||[]).slice().sort(function(a,b){
+    var ka = s(a.tanggal)+s(a.jam), kb = s(b.tanggal)+s(b.jam);
+    return ka.localeCompare(kb);
+  });
+
+  var todayItems = sorted.filter(function(a){ return s(a.tanggal) === todayDateStr; });
+
+  // Cari tanggal LAMPAU (sebelum hari ini) yang paling baru & punya agenda
+  var pastDatesSet = {};
+  sorted.forEach(function(a){
+    if(s(a.tanggal) < todayDateStr) pastDatesSet[s(a.tanggal)] = true;
+  });
+  var pastDates = Object.keys(pastDatesSet).sort(); // ascending
+  var prevDate  = pastDates.length ? pastDates[pastDates.length - 1] : null; // paling dekat dgn hari ini
+  var prevItems = prevDate ? sorted.filter(function(a){ return s(a.tanggal) === prevDate; }) : [];
+
+  container.innerHTML =
+    buildAgendaModernBlock('today', '🟢 Agenda Hari Ini', todayDateStr, todayItems) +
+    buildAgendaModernBlock('previous', '🟡 Agenda Sebelumnya', prevDate, prevItems);
+}
+
+function buildAgendaModernBlock(type, label, dateStr, items){
+  var dateLabel = dateStr ? fmtDateWithDay(dateStr) : '-';
+  var body;
+  if(!items || !items.length){
+    body = '<div class="agenda-modern-empty">--- Belum Ada Catatan Agenda ---</div>';
+  } else {
+    body = '<div class="agenda-modern-grid">' + items.map(function(a){
+      return '<div class="agenda-modern-card">'
+        + '<div class="agenda-modern-row"><span class="ic">🕐</span><span>: '+(s(a.jam)||'-')+'</span></div>'
+        + '<div class="agenda-modern-row"><span class="ic">📍</span><span>: '+s(a.tempat)+'</span></div>'
+        + '<div class="agenda-modern-row"><span class="ic">📋</span><span>: '+s(a.agenda)+'</span></div>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+  return '<div class="agenda-modern-section '+type+'">'
+    + '<div class="agenda-modern-title">'+label+' : '+dateLabel+'</div>'
+    + body
+    + '</div>';
+}
+
+// ── AGENDA CRUD ────────────────────────────────────────────
+function loadAgenda(){
+  setLoading(true,'Memuat agenda...');
+  google.script.run
+    .withSuccessHandler(function(data){
+      agendaData=data||[];
+      setLoading(false);
+      renderAgendaTable();
+    })
+    .withFailureHandler(function(e){ setLoading(false); showToast('Gagal memuat agenda.','error'); })
+    .getAgenda(currentPimpinan);
+}
+
+function renderAgendaTable(){
+  var q=(agendaSearch||'').toLowerCase();
+  var filtered = agendaData.filter(function(a){
+    if(!q) return true;
+    return s(a.agenda).toLowerCase().includes(q)||s(a.tempat).toLowerCase().includes(q)||s(a.pelaksana).toLowerCase().includes(q);
+  });
+  // Urutkan dari waktu TERBARU ke terlama (descending)
+  filtered.sort(function(a,b){
+    var ka=s(a.tanggal)+s(a.jam), kb=s(b.tanggal)+s(b.jam);
+    return kb.localeCompare(ka);
+  });
+  var tbody=document.getElementById('tbody-agenda');
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="emoji">📭</div><p>Tidak ada data agenda.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML=filtered.map(function(a,i){
+    var safeAgenda=s(a.agenda).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return '<tr>'
+      +'<td style="color:var(--gray3)">'+(i+1)+'</td>'
+      +'<td><strong>'+fmtDate(s(a.tanggal))+'</strong></td>'
+      +'<td>'+(s(a.jam)||'-')+'</td>'
+      +'<td>'+s(a.agenda)+'</td>'
+      +'<td>'+s(a.tempat)+'</td>'
+      +'<td>'+s(a.pelaksana)+'</td>'
+      +'<td>'+(s(a.pakaian)||'-')+'</td>'
+      +'<td><div class="table-actions">'
+        +'<button class="btn btn-primary btn-xs" onclick="openDetailAgenda(\''+s(a.id)+'\')">👁</button>'
+        +'<button class="btn btn-warning btn-xs" onclick="openModalEditAgenda(\''+s(a.id)+'\')">✏️</button>'
+        +'<button class="btn btn-danger btn-xs" onclick="confirmDeleteAgenda(\''+s(a.id)+'\',\''+safeAgenda+'\')">🗑</button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function filterAgendaTable(){
+  agendaSearch=document.getElementById('search-agenda').value;
+  renderAgendaTable();
+}
+
+function openModalAddAgenda(){
+  document.getElementById('modal-agenda-title').textContent='➕ Tambah Agenda';
+  document.getElementById('agenda-id').value='';
+  ['agenda-tanggal','agenda-agenda','agenda-tempat','agenda-pelaksana','agenda-pakaian','agenda-keterangan']
+    .forEach(function(id){ document.getElementById(id).value=''; });
+  initTimePicker('agenda-jam-h','agenda-jam-m');
+  setTimePicker('agenda-jam-h','agenda-jam-m','08:00');
+  openModal('modal-agenda');
+}
+function openModalEditAgenda(id){
+  var a=agendaData.find(function(x){ return x.id===id; });
+  if(!a) return;
+  document.getElementById('modal-agenda-title').textContent='✏️ Edit Agenda';
+  document.getElementById('agenda-id').value        = a.id;
+  document.getElementById('agenda-tanggal').value   = a.tanggal;
+  initTimePicker('agenda-jam-h','agenda-jam-m');
+  setTimePicker('agenda-jam-h','agenda-jam-m', s(a.jam));
+  document.getElementById('agenda-agenda').value    = s(a.agenda);
+  document.getElementById('agenda-tempat').value    = s(a.tempat);
+  document.getElementById('agenda-pelaksana').value = s(a.pelaksana);
+  document.getElementById('agenda-pakaian').value   = s(a.pakaian);
+  document.getElementById('agenda-keterangan').value= s(a.keterangan);
+  openModal('modal-agenda');
+}
+function openDetailAgenda(id){
+  var a=agendaData.find(function(x){ return x.id===id; });
+  if(!a) return;
+  document.getElementById('da-tanggal').textContent  = fmtDate(s(a.tanggal));
+  document.getElementById('da-jam').textContent      = s(a.jam)||'-';
+  document.getElementById('da-agenda').textContent   = s(a.agenda);
+  document.getElementById('da-tempat').textContent   = s(a.tempat);
+  document.getElementById('da-pelaksana').textContent= s(a.pelaksana);
+  document.getElementById('da-pakaian').textContent  = s(a.pakaian)||'-';
+  document.getElementById('da-keterangan').textContent = s(a.keterangan)||'-';
+  openModal('modal-detail-agenda');
+}
+function saveAgenda(){
+  var id=document.getElementById('agenda-id').value;
+  var d={
+    id        : id,
+    tanggal   : document.getElementById('agenda-tanggal').value,
+    jam       : getTimePicker('agenda-jam-h','agenda-jam-m'),
+    agenda    : document.getElementById('agenda-agenda').value.trim(),
+    tempat    : document.getElementById('agenda-tempat').value.trim(),
+    pelaksana : document.getElementById('agenda-pelaksana').value.trim(),
+    pakaian   : document.getElementById('agenda-pakaian').value.trim(),
+    keterangan: document.getElementById('agenda-keterangan').value.trim(),
+    pimpinan  : currentPimpinan
+  };
+  if(!d.tanggal||!d.jam||!d.agenda||!d.tempat||!d.pelaksana){
+    showToast('Kolom bertanda * wajib diisi.','warning'); return;
+  }
+  var btn=document.getElementById('btn-save-agenda');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+  setLoading(true,'Menyimpan...');
+
+  function onOK(r){
+    btn.disabled=false; btn.innerHTML='💾 Simpan Agenda'; setLoading(false);
+    if(r&&r.success){ showToast(r.message); closeModal('modal-agenda'); loadAgenda(); }
+    else showToast((r&&r.message)||'Gagal menyimpan.','error');
+  }
+  function onErr(e){ btn.disabled=false; btn.innerHTML='💾 Simpan Agenda'; setLoading(false); showToast('Gagal menyimpan.','error'); }
+
+  if(id) google.script.run.withSuccessHandler(onOK).withFailureHandler(onErr).editAgenda(d);
+  else   google.script.run.withSuccessHandler(onOK).withFailureHandler(onErr).addAgenda(d);
+}
+function confirmDeleteAgenda(id, nama){
+  if(!confirm('Hapus agenda "'+nama+'"? Tindakan ini tidak dapat dibatalkan.')) return;
+  setLoading(true,'Menghapus...');
+  google.script.run
+    .withSuccessHandler(function(r){
+      setLoading(false);
+      if(r&&r.success){ showToast(r.message); loadAgenda(); }
+      else showToast((r&&r.message)||'Gagal menghapus.','error');
+    })
+    .withFailureHandler(function(){ setLoading(false); showToast('Gagal menghapus.','error'); })
+    .deleteAgenda(id, currentPimpinan);
+}
+
+// ── PENGAJUAN (ADMIN) ──────────────────────────────────────
+function loadPengajuan(){
+  setLoading(true,'Memuat pengajuan...');
+  google.script.run
+    .withSuccessHandler(function(data){
+      pengajuanData=data||[];
+      setLoading(false);
+      renderPengajuanTable();
+    })
+    .withFailureHandler(function(){ setLoading(false); showToast('Gagal memuat pengajuan.','error'); })
+    .getPengajuan(currentPimpinan);
+}
+function setPjFilter(f){
+  pjFilter=f;
+  document.querySelectorAll('[id^="fb-"]').forEach(function(el){
+    el.classList.remove('btn-primary'); el.classList.add('btn-outline');
+  });
+  var active=document.getElementById('fb-'+(f==='semua'?'semua':f.toLowerCase()));
+  if(active){ active.classList.add('btn-primary'); active.classList.remove('btn-outline'); }
+  renderPengajuanTable();
+}
+function renderPengajuanTable(){
+  var filtered = pjFilter==='semua' ? pengajuanData.slice()
+    : pengajuanData.filter(function(p){ return p.status===pjFilter; });
+  // Urutkan dari waktu TERBARU ke terlama. ID pengajuan kini acak (4 karakter),
+  // jadi urutan memakai waktu masuk (ts) dari server; ID hanya penentu bila waktunya sama.
+  filtered.sort(function(a,b){ return ((b.ts||0)-(a.ts||0)) || s(b.id).localeCompare(s(a.id)); });
+  var tbody=document.getElementById('tbody-pengajuan');
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="emoji">📭</div><p>Tidak ada data pengajuan.</p></div></td></tr>';
+    return;
+  }
+  var bm={Menunggu:'badge-waiting',Disetujui:'badge-approved',Ditolak:'badge-rejected'};
+  var im={Menunggu:'⏳',Disetujui:'✅',Ditolak:'❌'};
+  tbody.innerHTML=filtered.map(function(p,i){
+    var wa=safeWA(p.noWA); // FIX: selalu string
+    var st=s(p.status);
+    return '<tr>'
+      +'<td style="color:var(--gray3)">'+(i+1)+'</td>'
+      +'<td><strong>'+s(p.nama)+'</strong><br><small style="color:var(--gray3)">'+s(p.id)+'</small></td>'
+      +'<td><a href="https://wa.me/'+wa+'" target="_blank" style="color:var(--green)">'+s(p.noWA)+'</a></td>'
+      +'<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+s(p.keperluan)+'">'+s(p.keperluan)+'</td>'
+      +'<td style="text-align:center">'+s(p.jumlahOrang)+'</td>'
+      +'<td style="white-space:nowrap">'+s(p.tanggalSubmit)+'</td>'
+      +'<td><span class="badge '+(bm[st]||'')+'">'+( im[st]||'')+' '+st+'</span></td>'
+      +'<td><button class="btn btn-gold btn-xs" onclick="openDetailPengajuan(\''+s(p.id)+'\')">'
+        +(st==='Menunggu'?'⚙️ Tinjau':'👁 Detail')+'</button></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function openDetailPengajuan(id){
+  var p=pengajuanData.find(function(x){ return x.id===id; });
+  if(!p){ showToast('Data tidak ditemukan.','error'); return; }
+
+  document.getElementById('pj-id').value=p.id;
+  document.getElementById('d-nama').textContent=s(p.nama);
+  var wa=safeWA(p.noWA);
+  document.getElementById('d-wa').innerHTML='<a href="https://wa.me/'+wa+'" target="_blank" style="color:var(--green)">'+s(p.noWA)+'</a>';
+  document.getElementById('d-alamat').textContent=s(p.alamat);
+  document.getElementById('d-keperluan').textContent=s(p.keperluan);
+  document.getElementById('d-jumlah').textContent=s(p.jumlahOrang);
+  document.getElementById('d-tgl').textContent=s(p.tanggalSubmit);
+
+  var bm={Menunggu:'badge-waiting',Disetujui:'badge-approved',Ditolak:'badge-rejected'};
+  var im={Menunggu:'⏳',Disetujui:'✅',Ditolak:'❌'};
+  var st=s(p.status);
+  document.getElementById('d-status').innerHTML='<span class="badge '+(bm[st]||'')+'">'+( im[st]||'')+' '+st+'</span>';
+
+  // Reset form tindak lanjut
+  document.getElementById('pj-status').value='';
+  document.getElementById('pj-catatan').value='';
+  document.getElementById('pj-agenda').value='Kunjungan Tamu: '+s(p.nama);
+  document.getElementById('pj-tanggal').value='';
+  initTimePicker('pj-jam-h','pj-jam-m');
+  setTimePicker('pj-jam-h','pj-jam-m','08:00');
+  document.getElementById('pj-tempat').value='';
+  document.getElementById('pj-pelaksana').value='';
+  document.getElementById('pj-pakaian').value='';
+  document.getElementById('pj-keterangan').value='';
+  document.getElementById('agenda-from-pj').style.display='none';
+
+  if(st==='Menunggu'){
+    document.getElementById('tindak-lanjut-section').style.display='';
+    document.getElementById('already-processed').style.display='none';
+  } else {
+    document.getElementById('tindak-lanjut-section').style.display='none';
+    document.getElementById('already-processed').style.display='';
+    document.getElementById('catatan-admin-display').textContent=s(p.catatanAdmin)?'Catatan: '+s(p.catatanAdmin):'';
+  }
+  openModal('modal-pengajuan');
+}
+
+function onStatusChange(){
+  var v=document.getElementById('pj-status').value;
+  document.getElementById('agenda-from-pj').style.display=(v==='Disetujui')?'':'none';
+}
+
+function saveTindakLanjut(){
+  var id     =document.getElementById('pj-id').value;
+  var status =document.getElementById('pj-status').value;
+  var catatan=document.getElementById('pj-catatan').value.trim();
+  if(!status){ showToast('Pilih keputusan terlebih dahulu.','warning'); return; }
+
+  var agendaPayload=null;
+  if(status==='Disetujui'){
+    var tgl   =document.getElementById('pj-tanggal').value;
+    var jam   =getTimePicker('pj-jam-h','pj-jam-m');
+    var agenda=document.getElementById('pj-agenda').value.trim();
+    var tempat=document.getElementById('pj-tempat').value.trim();
+    var pelaks=document.getElementById('pj-pelaksana').value.trim();
+    if(!tgl||!jam||!agenda||!tempat||!pelaks){ showToast('Isi data agenda terlebih dahulu.','warning'); return; }
+    agendaPayload={
+      tanggal:tgl, jam:jam, agenda:agenda, tempat:tempat, pelaksana:pelaks,
+      pakaian:document.getElementById('pj-pakaian').value.trim(),
+      keterangan:document.getElementById('pj-keterangan').value.trim()
+    };
+  }
+
+  var btn=document.getElementById('btn-save-tl');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
+  setLoading(true,'Menyimpan keputusan...');
+
+  google.script.run
+    .withSuccessHandler(function(r){
+      btn.disabled=false; btn.innerHTML='💾 Simpan Keputusan'; setLoading(false);
+      if(r&&r.success){
+        showToast(r.message);
+        closeModal('modal-pengajuan');
+        loadPengajuan();
+        // Refresh stats dashboard jika sedang di dashboard
+        var menTotal=parseInt(document.getElementById('stat-menunggu').textContent)||0;
+        document.getElementById('stat-menunggu').textContent=Math.max(0,menTotal-1);
+        if(status==='Disetujui'){
+          var dis=parseInt(document.getElementById('stat-disetujui').textContent)||0;
+          document.getElementById('stat-disetujui').textContent=dis+1;
+          var ag=parseInt(document.getElementById('stat-total-agenda').textContent)||0;
+          document.getElementById('stat-total-agenda').textContent=ag+1;
+          if(agendaPayload && agendaPayload.tanggal===todayStr()){
+            var ahi=parseInt(document.getElementById('stat-agenda-hari-ini').textContent)||0;
+            document.getElementById('stat-agenda-hari-ini').textContent=ahi+1;
+          }
+        }
+      } else {
+        showToast((r&&r.message)||'Gagal menyimpan.','error');
+      }
+    })
+    .withFailureHandler(function(e){
+      btn.disabled=false; btn.innerHTML='💾 Simpan Keputusan'; setLoading(false);
+      showToast('Gagal menyimpan keputusan.','error');
+    })
+    .updateStatusPengajuan(id, status, catatan, agendaPayload);
+}
+
+// ════════════════════════════════════════════════════════════
+// ── LAPORAN HARIAN ────────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+var laporanHarianData = [];
+
+function todayStr(){
+  var d=new Date();
+  var y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+
+// ── LAPORAN: switch tab Harian / Bulanan (1 menu, 2 tab) ───
+function switchLaporanTab(t){
+  var paneH=document.getElementById('laporan-pane-harian');
+  var paneB=document.getElementById('laporan-pane-bulanan');
+  var tabH=document.getElementById('lap-tab-harian');
+  var tabB=document.getElementById('lap-tab-bulanan');
+
+  paneH.style.display = t==='harian'  ? '' : 'none';
+  paneB.style.display = t==='bulanan' ? '' : 'none';
+
+  tabH.classList.toggle('active', t==='harian');
+  tabB.classList.toggle('active', t==='bulanan');
+
+  if(t==='harian') initLaporanHarian();
+  else initLaporanBulanan();
+}
+
+// ── Judul Laporan otomatis mengikuti Pimpinan yang sedang aktif ──
+// Formatnya: "Agenda {Label Pimpinan} HSU", mis. "Agenda Wakil Bupati HSU".
+// Field tetap bisa diedit manual: kalau user sudah mengubah isinya sendiri
+// (berbeda dari judul otomatis terakhir), perubahan pimpinan tidak akan menimpanya.
+var _lastAutoJudulLaporan = '';
+
+function judulLaporanOtomatis(pimpinanKey){
+  var label = PIMPINAN_LABELS[pimpinanKey] || '';
+  return label ? ('Agenda ' + label + ' HSU') : 'Agenda';
+}
+
+function autoIsiJudulLaporan(){
+  var inp = document.getElementById('lh-judul-laporan');
+  if(!inp) return;
+  var otomatis = judulLaporanOtomatis(currentPimpinan);
+  if(!inp.value.trim() || inp.value === _lastAutoJudulLaporan){
+    inp.value = otomatis;
+  }
+  _lastAutoJudulLaporan = otomatis;
+}
+
+function initLaporanHarian(){
+  var inp=document.getElementById('lh-tanggal');
+  if(!inp.value) inp.value = todayStr();
+  autoIsiJudulLaporan();
+  loadLaporanHarian();
+}
+
+function loadLaporanHarian(){
+  var tgl = document.getElementById('lh-tanggal').value;
+  if(!tgl){ showToast('Pilih tanggal terlebih dahulu.','warning'); return; }
+
+  document.getElementById('lh-judul-tanggal').textContent = fmtDateWithDay(tgl);
+  setLoading(true,'Memuat laporan harian...');
+
+  google.script.run
+    .withSuccessHandler(function(data){
+      setLoading(false);
+      data = data||[];
+      laporanHarianData = data.filter(function(a){ return s(a.tanggal)===tgl; })
+        .sort(function(a,b){ return s(a.jam).localeCompare(s(b.jam)); });
+
+      var tbody=document.getElementById('tbody-laporan-harian');
+      if(!laporanHarianData.length){
+        tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="emoji">📭</div><p>Tidak ada agenda pada tanggal ini.</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML=laporanHarianData.map(function(a,i){
+        return '<tr>'
+          +'<td style="color:var(--gray3)">'+(i+1)+'</td>'
+          +'<td><strong>'+fmtJamWita(a.jam)+'</strong></td>'
+          +'<td>'+s(a.agenda)+'</td>'
+          +'<td>'+s(a.tempat)+'</td>'
+          +'<td>'+s(a.pelaksana)+'</td>'
+          +'<td>'+(s(a.pakaian)||'-')+'</td>'
+          +'<td>'+(s(a.keterangan)||'-')+'</td>'
+          +'</tr>';
+      }).join('');
+    })
+    .withFailureHandler(function(){
+      setLoading(false);
+      showToast('Gagal memuat laporan harian.','error');
+    })
+    .getAgenda(currentPimpinan);
+}
+
+function kirimWALaporanHarian(){
+  var tgl = document.getElementById('lh-tanggal').value;
+  if(!tgl){ showToast('Pilih tanggal terlebih dahulu.','warning'); return; }
+  if(!laporanHarianData.length){
+    showToast('Tidak ada agenda untuk dikirim pada tanggal ini.','warning');
+    return;
+  }
+
+  var judul = document.getElementById('lh-judul-laporan').value.trim() || 'Agenda';
+
+  // bukaWA() dipanggil di dalam callback async — tidak ada popup blocker
+  // karena memakai <a> click, bukan window.open().
+  google.script.run
+    .withSuccessHandler(function(pjData){
+      var menunggu = (pjData||[]).filter(function(d){ return d.status==='Menunggu'; }).length;
+
+      var teks = judul + '\n';
+      teks += fmtDateWithDay(tgl) + '\n';
+
+      laporanHarianData.forEach(function(a, i){
+        if(i > 0) teks += '\n';
+        var jam = (s(a.jam) || '').replace(':', '.');
+        teks += (i+1) + '.\n';
+        teks += 'Jam: ' + jam + (jam ? ' WITA' : '') + '\n';
+        teks += 'Agenda: ' + s(a.agenda) + '\n';
+        teks += 'Tempat: ' + s(a.tempat) + '\n';
+        teks += 'Pelaksana: ' + s(a.pelaksana) + '\n';
+        teks += 'Pakaian: ' + s(a.pakaian) + '\n';
+        teks += 'Keterangan: ' + s(a.keterangan) + '\n';
+      });
+
+      var narasiWA = menunggu > 0
+        ? '_Ada ' + menunggu + ' pengajuan tamu yang masih menunggu persetujuan_'
+        : '_Tidak ada pengajuan kunjungan tamu yang menunggu_';
+      teks += '\n' + narasiWA;
+      bukaWA(teks);
+    })
+    .withFailureHandler(function(){
+      // Jika gagal ambil data pengajuan, tetap kirim laporan TANPA baris narasi
+      var teks = judul + '\n';
+      teks += fmtDateWithDay(tgl) + '\n';
+      laporanHarianData.forEach(function(a, i){
+        if(i > 0) teks += '\n';
+        var jam = (s(a.jam) || '').replace(':', '.');
+        teks += (i+1) + '.\n';
+        teks += 'Jam: ' + jam + (jam ? ' WITA' : '') + '\n';
+        teks += 'Agenda: ' + s(a.agenda) + '\n';
+        teks += 'Tempat: ' + s(a.tempat) + '\n';
+        teks += 'Pelaksana: ' + s(a.pelaksana) + '\n';
+        teks += 'Pakaian: ' + s(a.pakaian) + '\n';
+        teks += 'Keterangan: ' + s(a.keterangan) + '\n';
+      });
+      bukaWA(teks);
+    })
+    .getPengajuan(currentPimpinan);
+}
+
+// ── EXPORT PDF LAPORAN HARIAN (Struk lebar 10cm) ────────────
+// Layout meniru contoh: Judul, Tanggal, lalu daftar "Agenda N"
+// dengan field Jam/Agenda/Tempat/Pelaksana/Pakaian/Keterangan.
+// Lebar kertas TETAP 10cm, tinggi menyesuaikan otomatis (auto-height)
+// mengikuti panjang konten agar tidak ada ruang kosong berlebih.
+function exportPDFLaporanHarian(){
+  var tgl = document.getElementById('lh-tanggal').value;
+  if(!tgl){ showToast('Pilih tanggal terlebih dahulu.','warning'); return; }
+  if(!laporanHarianData.length){
+    showToast('Tidak ada agenda untuk diexport pada tanggal ini.','warning');
+    return;
+  }
+  if(typeof window.jspdf === 'undefined'){
+    withLibs(LIB_PDF, exportPDFLaporanHarian);
+    return;
+  }
+
+  var judul  = document.getElementById('lh-judul-laporan').value.trim() || 'Agenda';
+  var tglFmt = fmtDateWithDay(tgl);
+
+  var btn=document.getElementById('btn-pdf-harian');
+  var origHtml=btn.innerHTML;
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Membuat PDF...';
+
+  // Ambil jumlah pengajuan yang masih "Menunggu" dulu (untuk narasi di bagian
+  // bawah PDF), baru generate dokumennya.
+  google.script.run
+    .withSuccessHandler(function(pjData){
+      var menunggu = (pjData||[]).filter(function(d){ return d.status==='Menunggu'; }).length;
+      generatePdfStrukHarian(menunggu);
+    })
+    .withFailureHandler(function(){
+      generatePdfStrukHarian(null); // gagal ambil data → PDF tetap dibuat tanpa narasi
+    })
+    .getPengajuan(currentPimpinan);
+
+  function generatePdfStrukHarian(menunggu){
+  try{
+    var jsPDF   = window.jspdf.jsPDF;
+    var PAGE_W  = 100;            // lebar kertas TETAP 10cm (100mm)
+    var MARGIN  = 6;
+    // Padding ekstra khusus sisi KANAN: teks rata-kiri (word-wrap) bisa
+    // memenuhi nyaris sampai batas lebar, sehingga jarak ke tepi kanan
+    // terlihat lebih kecil dari kiri. Padding ini menambah "jatah aman"
+    // agar jarak ujung huruf ke kertas terlihat seimbang kiri-kanan.
+    var RIGHT_PAD = 7;
+    var CONTENT_W = PAGE_W - MARGIN*2 - RIGHT_PAD;
+    var RIGHT_EDGE = MARGIN + CONTENT_W; // batas kanan efektif untuk teks & garis
+
+    var FS_TITLE = 12;  // judul laporan
+    var FS_SUB   = 9;   // baris tanggal
+    var FS_HEAD  = 10;  // "Agenda N"
+    var FS_BODY  = 8.5; // field jam/agenda/tempat/dst
+
+    // "1 spasi" = tinggi baris normal (single line spacing) untuk ukuran font tsb.
+    // "2 spasi" (jarak antar paragraf/agenda) = 2x tinggi baris normal.
+    var LEAD = 1.15;
+    function lh(fsPt){ return fsPt * 0.3528 * LEAD; }
+
+    // Word-wrap AMAN: mencegah teks terpotong di tepi kertas.
+    // splitTextToSize bawaan jsPDF TIDAK memecah satu kata yang lebih
+    // lebar dari maxWidth (kata panjang akan tetap 1 baris & melebihi
+    // batas kertas → terlihat terpotong). Fungsi ini memecah kata yang
+    // terlalu panjang per-karakter jika perlu, sehingga selalu muat.
+    function wrapTextSafe(doc, text, maxWidth){
+      text = s(text);
+      if(!text) return [''];
+      // Faktor pengaman: gunakan batas lebar yang sedikit LEBIH SEMPIT (96%)
+      // dari maxWidth asli saat memutuskan pembungkusan baris. Ini mencegah
+      // teks "mepet pas" yang berisiko terpotong tipis saat benar-benar
+      // dirender (selisih kecil pengukuran lebar antar instance jsPDF).
+      var safeWidth = maxWidth * 0.96;
+      var words = text.split(/\s+/).filter(function(w){ return w.length>0; });
+      if(!words.length) return [''];
+      var lines = [];
+      var current = '';
+      words.forEach(function(word){
+        // Jika satu kata saja sudah lebih lebar dari batas aman, pecah per-karakter
+        while(doc.getTextWidth(word) > safeWidth && word.length > 1){
+          var fit = 1;
+          while(fit < word.length && doc.getTextWidth(word.substring(0, fit+1)) <= safeWidth){ fit++; }
+          if(current){ lines.push(current); current=''; }
+          lines.push(word.substring(0, fit));
+          word = word.substring(fit);
+        }
+        var test = current ? (current + ' ' + word) : word;
+        if(doc.getTextWidth(test) <= safeWidth){
+          current = test;
+        } else {
+          if(current) lines.push(current);
+          current = word;
+        }
+      });
+      if(current) lines.push(current);
+      return lines.length ? lines : [''];
+    }
+
+    var LABELS = ['Jam','Agenda','Tempat','Pelaksana','Pakaian','Keterangan'];
+
+    // ── PASS 1: ukur kebutuhan tinggi halaman + hitung kolom titik dua ──
+    var mdoc = new jsPDF({ unit:'mm', format:[PAGE_W, 1000], orientation:'portrait' });
+
+    // Hitung lebar label TERPANJANG agar titik dua semua baris
+    // (Jam s/d Keterangan) berada pada posisi X yang SAMA.
+    mdoc.setFont(undefined,'normal'); mdoc.setFontSize(FS_BODY);
+    var maxLabelW = 0;
+    LABELS.forEach(function(lbl){
+      var w = mdoc.getTextWidth(lbl);
+      if(w > maxLabelW) maxLabelW = w;
+    });
+    var GAP_LABEL_COLON = 1.0;  // jarak label ke titik dua
+    var GAP_COLON_VALUE = 1.8;  // jarak titik dua ke nilai
+    var colonOffsetX = maxLabelW + GAP_LABEL_COLON;        // posisi titik dua relatif terhadap margin kiri
+    var valueOffsetX = colonOffsetX + GAP_COLON_VALUE;     // posisi awal nilai relatif terhadap margin kiri
+    var valueMaxW    = CONTENT_W - valueOffsetX;           // lebar maksimal teks nilai (untuk wrapping)
+
+    var paragraphGap = 2 * lh(FS_BODY); // jarak antar-agenda (paragraf) = 2 spasi
+
+    var totalH = MARGIN;
+
+    // Judul laporan (tetap tebal)
+    mdoc.setFont(undefined,'bold'); mdoc.setFontSize(FS_TITLE);
+    var titleLines = wrapTextSafe(mdoc, judul, CONTENT_W);
+    totalH += titleLines.length * lh(FS_TITLE);
+
+    // Tanggal (1 spasi dari judul, tidak tebal)
+    totalH += lh(FS_SUB);
+    // Garis pembatas (1 spasi dari tanggal) + jarak ke "Agenda 1" (2 spasi)
+    totalH += paragraphGap;
+
+    var itemBlocks = [];
+
+    laporanHarianData.forEach(function(a, idx){
+      var block = { heading: 'Agenda ' + (idx+1), fields: [] };
+      if(idx > 0) totalH += paragraphGap; // jarak antar-agenda = 2 spasi
+
+      // Heading "Agenda N" (1 spasi sebelum field pertama)
+      totalH += lh(FS_HEAD);
+
+      mdoc.setFont(undefined,'normal'); mdoc.setFontSize(FS_BODY);
+
+      var jamFormatted = (s(a.jam)||'').replace(':', '.');
+      var rawValues = [
+        jamFormatted ? jamFormatted + ' WITA' : '',
+        s(a.agenda),
+        s(a.tempat),
+        s(a.pelaksana),
+        s(a.pakaian),
+        s(a.keterangan)
+      ];
+
+      LABELS.forEach(function(label, li){
+        var value = rawValues[li];
+        // Semua baris (termasuk lanjutan) memakai lebar yang sama (valueMaxW)
+        // karena posisinya sudah tetap rata di kolom nilai (valueOffsetX).
+        // Jarak antar baris (termasuk baris lanjutan) = 1 spasi.
+        // wrapTextSafe mencegah teks/kata panjang terpotong di tepi kertas.
+        var lines = wrapTextSafe(mdoc, value, valueMaxW);
+        block.fields.push({ label: label, lines: lines });
+        totalH += lines.length * lh(FS_BODY);
+      });
+
+      itemBlocks.push(block);
+    });
+
+    // Narasi miring jumlah pengajuan tamu yang masih menunggu persetujuan,
+    // ditampilkan di bagian paling bawah (jika data berhasil diambil).
+    var footerLines = null;
+    if(menunggu !== null){
+      totalH += paragraphGap; // jarak ke narasi = 2 spasi (seperti antar-paragraf)
+      mdoc.setFont('helvetica','italic'); mdoc.setFontSize(FS_BODY);
+      var footerText = menunggu > 0
+        ? 'Ada ' + menunggu + ' pengajuan tamu yang masih menunggu persetujuan'
+        : 'Tidak ada pengajuan kunjungan tamu yang menunggu';
+      footerLines = wrapTextSafe(mdoc, footerText, CONTENT_W);
+      totalH += footerLines.length * lh(FS_BODY);
+    }
+
+    totalH += MARGIN; // margin bawah
+
+    // ── PASS 2: render ke halaman dengan tinggi pas (auto-height) ──
+    // PENTING — FIX BUG: jsPDF SECARA OTOMATIS MENUKAR lebar↔tinggi jika
+    // orientasi tidak ditentukan secara eksplisit DAN tinggi (totalH) lebih
+    // kecil dari lebar (PAGE_W) — karena defaultnya "portrait" memaksa
+    // tinggi >= lebar. Ini membuat kertas yang seharusnya LEBAR TETAP 100mm
+    // malah jadi SEMPIT (sebesar totalH) saat konten pendek, menyebabkan
+    // semua teks "terpotong" di tepi kanan. Dengan menentukan orientation
+    // secara dinamis sesuai dimensi sebenarnya, jsPDF tidak akan menukar
+    // apa pun — lebar SELALU tetap PAGE_W (100mm) seperti yang diminta.
+    var orientationStruk = (totalH >= PAGE_W) ? 'portrait' : 'landscape';
+    var doc = new jsPDF({ unit:'mm', format:[PAGE_W, totalH], orientation: orientationStruk });
+    var x = MARGIN, y = MARGIN;
+    var colonX = x + colonOffsetX;
+    var valueX = x + valueOffsetX;
+
+    // Judul (tebal)
+    doc.setFont(undefined,'bold'); doc.setFontSize(FS_TITLE);
+    titleLines.forEach(function(line){
+      doc.text(line, PAGE_W/2, y, { align:'center' });
+      y += lh(FS_TITLE);
+    });
+
+    // Tanggal (TIDAK tebal, 1 spasi dari judul)
+    doc.setFont(undefined,'normal'); doc.setFontSize(FS_SUB);
+    doc.text(tglFmt, PAGE_W/2, y, { align:'center' });
+    y += lh(FS_SUB);
+
+    // Garis pembatas (1 spasi dari tanggal)
+    doc.setDrawColor(170);
+    doc.setLineWidth(0.2);
+    doc.line(MARGIN, y, RIGHT_EDGE, y);
+    y += paragraphGap; // jarak garis ke "Agenda 1" dibuat lebih lega (2 spasi)
+
+    itemBlocks.forEach(function(block, idx){
+      if(idx > 0) y += paragraphGap; // jarak antar-agenda = 2 spasi
+
+      // Heading "Agenda N" (tetap tebal sebagai pemisah seksi)
+      doc.setFont(undefined,'bold'); doc.setFontSize(FS_HEAD);
+      doc.text(block.heading, x, y);
+      y += lh(FS_HEAD); // 1 spasi ke field pertama
+
+      doc.setFont(undefined,'normal'); doc.setFontSize(FS_BODY);
+      block.fields.forEach(function(f){
+        // Label, titik dua, dan nilai SEMUA tidak tebal (regular).
+        // Titik dua selalu di posisi X yang sama → tampak rapi/sejajar.
+        doc.text(f.label, x, y);
+        doc.text(':', colonX, y);
+        f.lines.forEach(function(line){
+          doc.text(line, valueX, y); // 1 spasi antar baris (termasuk lanjutan)
+          y += lh(FS_BODY);
+        });
+      });
+    });
+
+    // Narasi miring jumlah pengajuan tamu yang masih menunggu, di paling bawah
+    if(footerLines){
+      y += paragraphGap;
+      doc.setFont('helvetica','italic'); doc.setFontSize(FS_BODY);
+      footerLines.forEach(function(line){
+        doc.text(line, x, y);
+        y += lh(FS_BODY);
+      });
+    }
+
+    doc.save('Laporan-Harian-' + tgl + '.pdf');
+    showToast('PDF berhasil diunduh!');
+  }catch(e){
+    console.error('PDF harian export error:', e);
+    showToast('Gagal membuat PDF: ' + e.message, 'error');
+  }finally{
+    btn.disabled=false; btn.innerHTML=origHtml;
+  }
+  } // /generatePdfStrukHarian
+}
+// ════════════════════════════════════════════════════════════
+var laporanBulananData = [];
+var bulanNamaPanjang = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+function thisMonthStr(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+
+function initLaporanBulanan(){
+  var inp=document.getElementById('lb-bulan');
+  if(!inp.value) inp.value = thisMonthStr();
+  loadLaporanBulanan();
+}
+
+function loadLaporanBulanan(){
+  var bln = document.getElementById('lb-bulan').value; // format: yyyy-mm
+  if(!bln){ showToast('Pilih bulan terlebih dahulu.','warning'); return; }
+
+  var parts = bln.split('-');
+  var judul = bulanNamaPanjang[parseInt(parts[1])-1] + ' ' + parts[0];
+  document.getElementById('lb-judul-bulan').textContent = judul;
+
+  setLoading(true,'Memuat laporan bulanan...');
+
+  google.script.run
+    .withSuccessHandler(function(data){
+      setLoading(false);
+      data = data||[];
+      laporanBulananData = data.filter(function(a){ return s(a.tanggal).startsWith(bln); })
+        .sort(function(a,b){
+          var ka=s(a.tanggal)+s(a.jam), kb=s(b.tanggal)+s(b.jam);
+          return ka.localeCompare(kb);
+        });
+
+      document.getElementById('lb-total-count').textContent = laporanBulananData.length + ' agenda';
+
+      var tbody=document.getElementById('tbody-laporan-bulanan');
+      if(!laporanBulananData.length){
+        tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><div class="emoji">📭</div><p>Tidak ada agenda pada bulan ini.</p></div></td></tr>';
+        return;
+      }
+      tbody.innerHTML=laporanBulananData.map(function(a,i){
+        return '<tr>'
+          +'<td style="color:var(--gray3)">'+(i+1)+'</td>'
+          +'<td><strong>'+fmtDate(s(a.tanggal))+'</strong></td>'
+          +'<td>'+fmtJamWita(a.jam)+'</td>'
+          +'<td>'+s(a.agenda)+'</td>'
+          +'<td>'+s(a.tempat)+'</td>'
+          +'<td>'+s(a.pelaksana)+'</td>'
+          +'<td>'+(s(a.pakaian)||'-')+'</td>'
+          +'</tr>';
+      }).join('');
+    })
+    .withFailureHandler(function(){
+      setLoading(false);
+      showToast('Gagal memuat laporan bulanan.','error');
+    })
+    .getAgenda(currentPimpinan);
+}
+
+function exportPDFLaporanBulanan(){
+  if(!laporanBulananData.length){
+    showToast('Tidak ada data agenda untuk diexport pada bulan ini.','warning');
+    return;
+  }
+  if(typeof window.jspdf === 'undefined'){
+    withLibs(LIB_PDF, exportPDFLaporanBulanan);
+    return;
+  }
+
+  var bln = document.getElementById('lb-bulan').value;
+  var parts = bln.split('-');
+  var judul = bulanNamaPanjang[parseInt(parts[1])-1] + ' ' + parts[0];
+
+  var btn=document.getElementById('btn-pdf-bulanan');
+  var origHtml=btn.innerHTML;
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Membuat PDF...';
+
+  try{
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+
+    // Header
+    doc.setFontSize(15);
+    doc.setFont(undefined,'bold');
+    doc.text('LAPORAN AGENDA KUNJUNGAN BULANAN', 14, 16);
+    doc.setFontSize(11);
+    doc.setFont(undefined,'normal');
+    doc.text('Periode: ' + judul, 14, 23);
+    doc.text('Total Agenda: ' + laporanBulananData.length, 14, 29);
+
+    var rows = laporanBulananData.map(function(a,i){
+      return [
+        i+1,
+        fmtDate(s(a.tanggal)),
+        fmtJamWita(a.jam),
+        s(a.agenda),
+        s(a.tempat),
+        s(a.pelaksana),
+        s(a.pakaian)||'-',
+        s(a.keterangan)||'-'
+      ];
+    });
+
+    doc.autoTable({
+      startY: 34,
+      head: [['#','Tanggal','Jam','Agenda','Tempat','Pelaksana','Pakaian','Keterangan']],
+      body: rows,
+      styles: { fontSize: 8.5, cellPadding: 2.5 },
+      headStyles: { fillColor: [26,39,68], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [248,246,240] },
+      columnStyles: {
+        0: { cellWidth: 8 },
+        1: { cellWidth: 22 },
+        2: { cellWidth: 20 }
+      },
+      margin: { left: 14, right: 14 }
+    });
+
+    // Footer halaman
+    var pageCount = doc.internal.getNumberOfPages();
+    for(var i=1;i<=pageCount;i++){
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text('Dicetak: ' + new Date().toLocaleString('id-ID'), 14, doc.internal.pageSize.height - 8);
+      doc.text('Halaman ' + i + ' / ' + pageCount, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 8);
+    }
+
+    doc.save('Laporan-Agenda-' + judul.replace(' ','-') + '.pdf');
+    showToast('PDF berhasil diunduh!');
+  }catch(e){
+    console.error('PDF export error:', e);
+    showToast('Gagal membuat PDF: ' + e.message, 'error');
+  }finally{
+    btn.disabled=false; btn.innerHTML=origHtml;
+  }
+}
+
+// ── EXPORT EXCEL LAPORAN BULANAN ────────────────────────────
+function exportExcelLaporanBulanan(){
+  if(!laporanBulananData.length){
+    showToast('Tidak ada data agenda untuk diexport pada bulan ini.','warning');
+    return;
+  }
+  if(typeof XLSX === 'undefined'){
+    withLibs(LIB_XLSX, exportExcelLaporanBulanan);
+    return;
+  }
+
+  var bln = document.getElementById('lb-bulan').value;
+  var parts = bln.split('-');
+  var judul = bulanNamaPanjang[parseInt(parts[1])-1] + ' ' + parts[0];
+
+  var btn=document.getElementById('btn-excel-bulanan');
+  var origHtml=btn.innerHTML;
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Membuat Excel...';
+
+  try{
+    var rows = laporanBulananData.map(function(a, i){
+      return {
+        '#'          : i + 1,
+        'Tanggal'    : fmtDate(s(a.tanggal)),
+        'Jam'        : fmtJamWita(a.jam),
+        'Agenda'     : s(a.agenda),
+        'Tempat'     : s(a.tempat),
+        'Pelaksana'  : s(a.pelaksana),
+        'Pakaian'    : s(a.pakaian) || '-',
+        'Keterangan' : s(a.keterangan) || '-'
+      };
+    });
+
+    var ws = XLSX.utils.json_to_sheet(rows);
+    // Atur lebar kolom agar isi lebih mudah dibaca
+    ws['!cols'] = [
+      { wch: 4 },  // #
+      { wch: 14 }, // Tanggal
+      { wch: 14 }, // Jam
+      { wch: 35 }, // Agenda
+      { wch: 28 }, // Tempat
+      { wch: 22 }, // Pelaksana
+      { wch: 16 }, // Pakaian
+      { wch: 35 }  // Keterangan
+    ];
+
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Laporan ' + judul);
+    XLSX.writeFile(wb, 'Laporan-Bulanan-' + judul.replace(' ', '-') + '.xlsx');
+    showToast('File Excel berhasil diunduh!');
+  }catch(e){
+    console.error('Excel export error:', e);
+    showToast('Gagal membuat file Excel: ' + e.message, 'error');
+  }finally{
+    btn.disabled=false; btn.innerHTML=origHtml;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// ── GOOGLE CALENDAR (UI) ─────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+
+var _calendarIdSaved = '';
+
+function loadCalendarSettings(){
+  var pg  = document.getElementById('page-dashboard');
+  var sel = document.getElementById('sel-calendar');
+  var txt = document.getElementById('cal-status-text');
+  if(!sel || !pg || !pg.classList.contains('active')) return; // kartu ini hanya ada di Dashboard
+  if(_calLoadedFor === currentPimpinan) return;                // sudah dimuat, tidak perlu panggilan server lagi
+  var _calFor = currentPimpinan;
+  sel.innerHTML = '<option value="">⏳ Memuat...</option>';
+
+  google.script.run
+    .withSuccessHandler(function(r){
+      var cals = (r && r.calendars) || [];
+      sel.innerHTML = '';
+      if(!cals.length){
+        sel.innerHTML = '<option value="primary">📅 Kalender Utama (primary)</option>';
+        txt.textContent = 'Tidak ada kalender lain yang ditemukan.';
+        return;
+      }
+      cals.forEach(function(c){
+        var opt = document.createElement('option');
+        opt.value = c.id;
+        opt.text  = c.name + (c.id==='primary'||c.name==='primary' ? ' (Utama)' : '');
+        sel.appendChild(opt);
+      });
+      _calendarIdSaved = (r && r.currentId) || 'primary';
+      _calLoadedFor = _calFor;
+      sel.value = _calendarIdSaved;
+      if(!sel.value && sel.options.length) sel.selectedIndex=0;
+      txt.textContent = '✅ Tersinkron ke: ' + (sel.options[sel.selectedIndex]||{text:'-'}).text;
+    })
+    .withFailureHandler(function(){
+      sel.innerHTML = '<option value="primary">📅 Kalender Utama (primary)</option>';
+      txt.textContent = '⚠️ Gagal memuat daftar kalender.';
+    })
+    .getCalendarSettings(currentPimpinan);
+}
+
+function simpanCalendarId(){
+  var sel = document.getElementById('sel-calendar');
+  var txt = document.getElementById('cal-status-text');
+  if(!sel||!sel.value) return;
+  txt.textContent = '⏳ Menyimpan...';
+  google.script.run
+    .withSuccessHandler(function(r){
+      _calendarIdSaved = sel.value;
+      txt.textContent  = '✅ Tersimpan — Tersinkron ke: ' + sel.options[sel.selectedIndex].text;
+      showToast('Pengaturan kalender berhasil disimpan!');
+    })
+    .withFailureHandler(function(){
+      txt.textContent = '❌ Gagal menyimpan.';
+      showToast('Gagal menyimpan pengaturan kalender.','error');
+    })
+    .setCalendarId(currentPimpinan, sel.value);
+}
+
+function syncSemuaAgenda(){
+  var btn=document.getElementById('btn-sync-all');
+  var origHtml=btn.innerHTML;
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Menyinkronkan...';
+  setLoading(true,'Menyinkronkan ke Google Calendar...');
+
+  google.script.run
+    .withSuccessHandler(function(r){
+      btn.disabled=false; btn.innerHTML=origHtml; setLoading(false);
+      showToast(r.message);
+    })
+    .withFailureHandler(function(e){
+      btn.disabled=false; btn.innerHTML=origHtml; setLoading(false);
+      showToast('Gagal sinkronisasi: '+(e.message||''),'error');
+    })
+    .syncAllToCalendar(currentPimpinan);
+}
+
+
+// Fokus otomatis ke kolom username saat halaman admin dibuka
+window.addEventListener('load', function(){ var u=document.getElementById('admin-user'); if(u) u.focus(); });
+
+</script>
+</body>
+</html>
