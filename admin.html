@@ -1713,15 +1713,28 @@ function buildAgendaModernBlock(type, label, dateStr, items){
 }
 
 // ── AGENDA CRUD ────────────────────────────────────────────
-function loadAgenda(){
+function loadAgenda(isRetry){
   setLoading(true,'Memuat agenda...');
   google.script.run
     .withSuccessHandler(function(data){
-      agendaData=data||[];
       setLoading(false);
-      renderAgendaTable();
+      try{
+        agendaData=Array.isArray(data)?data:[];
+        renderAgendaTable();
+      }catch(e){
+        console.error('renderAgendaTable error:',e);
+        showToast('Gagal menampilkan agenda: '+((e&&e.message)||e),'error');
+      }
     })
-    .withFailureHandler(function(e){ setLoading(false); showToast('Gagal memuat agenda.','error'); })
+    .withFailureHandler(function(e){
+      console.error('getAgenda error:',e);
+      // Percobaan ulang otomatis 1x (server Apps Script kadang baru bangun / sibuk)
+      if(!isRetry){ setTimeout(function(){ loadAgenda(true); },800); return; }
+      setLoading(false);
+      var tb=document.getElementById('tbody-agenda');
+      if(tb) tb.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="emoji">⚠️</div><p>Gagal memuat agenda: '+escHtml((e&&e.message)||'tidak diketahui')+'</p><button class="btn btn-primary btn-xs" onclick="loadAgenda()">Coba lagi</button></div></td></tr>';
+      showToast('Gagal memuat agenda: '+((e&&e.message)||''),'error');
+    })
     .getAgenda(currentPimpinan);
 }
 
