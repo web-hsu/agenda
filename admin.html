@@ -1461,6 +1461,8 @@ function applyLoginResult(r){
 
 // ── PILIH PIMPINAN & LOGIN ────────────────────────────────
 var _warmed = {};
+// Bangunkan server Apps Script begitu halaman dibuka (ringan: hanya cache akun)
+try{ google.script.run.withSuccessHandler(function(){}).withFailureHandler(function(){}).warm(); }catch(e){}
 function hubTampilError(key,msg){
   var e=document.getElementById('e-'+key); if(!e) return;
   e.textContent=msg||''; e.classList.toggle('show',!!msg);
