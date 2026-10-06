@@ -1294,7 +1294,7 @@ function loadEmailKalender(){
   var scope = emailScope();
   document.getElementById('email-pimpinan-name').textContent = scope==='all' ? 'Semua Pimpinan' : (PIMPINAN_LABELS[currentPimpinan] || '-');
   if(!scope) return;
-  setLoading(true,'Memuat email kalender...');
+  if(!(window.gasHasCache && gasHasCache('getEmailKalender',[sessionToken, scope]))) setLoading(true,'Memuat email kalender...');
   google.script.run
     .withSuccessHandler(function(list){
       setLoading(false);
@@ -1415,7 +1415,7 @@ function firstAllowedPage(){
 }
 
 function loadAkun(){
-  setLoading(true,'Memuat akun...');
+  if(!(window.gasHasCache && gasHasCache('getAkunList',[sessionToken]))) setLoading(true,'Memuat akun...');
   google.script.run
     .withSuccessHandler(function(r){
       setLoading(false);
@@ -1590,6 +1590,7 @@ function applyLoginResult(r){
           var first = firstAllowedPage();
           if(first){
             showPage(first);
+            if(first !== 'dashboard') prefetchMenus();
           } else {
             document.querySelectorAll('.page').forEach(function(el){ el.classList.remove('active'); });
             showToast('Akun ini belum memiliki akses menu apa pun. Hubungi superadmin.','warning');
@@ -1632,9 +1633,11 @@ function doAdminLogin(){
 
   var btn=document.getElementById('btn-admin-login');
   btn.innerHTML='<span class="spinner"></span> Memverifikasi...'; btn.disabled=true;
+  var _slow = setTimeout(function(){ btn.innerHTML='<span class="spinner"></span> Menyiapkan server...'; }, 3000);
 
   google.script.run
     .withSuccessHandler(function(r){
+      clearTimeout(_slow);
       btn.innerHTML='Masuk'; btn.disabled=false;
       if(r && r.success){
         applyLoginResult(r);
@@ -1643,6 +1646,7 @@ function doAdminLogin(){
       }
     })
     .withFailureHandler(function(e){
+      clearTimeout(_slow);
       btn.innerHTML='Masuk'; btn.disabled=false;
       showToast('Gagal terhubung ke server: '+(e.message||''),'error');
     })
@@ -1681,6 +1685,7 @@ function onPimpinanSwitch(){
   else if(p==='pengajuan') loadPengajuan();
   else if(p==='laporan'){ initLaporanHarian(); loadCalendarSettingsIfVisible(); }
   else if(p==='email') loadEmailKalender();
+  prefetchMenus();
 }
 
 // Perbarui judul halaman agar menunjukkan pimpinan yang sedang aktif
@@ -1700,7 +1705,8 @@ function doLogout(){
   document.getElementById('admin-user').value='';
   if(sessionToken){ google.script.run.logout(sessionToken); }
   sessionToken = ''; currentUsername = ''; userModul = []; akunData = []; emailData = [];
-  _dashPrefetch = null; _calLoadedFor = '';
+  _dashPrefetch = null; _calLoadedFor = ''; _prefetchedFor = '';
+  if(window.gasClearCache) gasClearCache();
   var ev = document.getElementById('email-view'); if(ev) ev.value = 'current';
   currentPimpinan = ''; currentRole=''; isSuperadmin=false;
 }
@@ -1768,7 +1774,28 @@ function renderDashboard(res){
       }
       // Pengaturan kalender dimuat SETELAH data utama tampil (tidak menghambat)
       loadCalendarSettings();
+      prefetchMenus();
 }
+
+// Muat menu lain di latar belakang (setelah dashboard tampil) agar klik menu terasa instan
+var _prefetchedFor = '';
+function prefetchMenus(){
+  if(!window.gasPrefetch || !currentPimpinan || _prefetchedFor === currentPimpinan) return;
+  _prefetchedFor = currentPimpinan;
+  var pm = currentPimpinan;
+  setTimeout(function(){
+    if(pm !== currentPimpinan || !sessionToken) return;
+    if(canAccessPage('agenda'))    gasPrefetch('getAgenda',[pm]);
+    if(canAccessPage('pengajuan')) gasPrefetch('getPengajuan',[pm]);
+    if(canAccessPage('akun'))      gasPrefetch('getAkunList',[sessionToken]);
+    if(canAccessPage('email')){ var sc = emailScope(); if(sc) gasPrefetch('getEmailKalender',[sessionToken, sc]); }
+  }, 300);
+}
+// Jaga server & cache tetap hangat selama halaman terbuka (Apps Script "tidur" setelah beberapa menit)
+setInterval(function(){
+  if(!sessionToken || document.hidden) return;
+  google.script.run.withSuccessHandler(function(){}).withFailureHandler(function(){}).warm(currentPimpinan);
+}, 240000);
 
 function loadDashboard(){
   // Data dashboard sudah ikut terkirim saat login → tampil seketika, tanpa menunggu server lagi.
@@ -1840,7 +1867,7 @@ function buildAgendaModernBlock(type, label, dateStr, items){
 
 // ── AGENDA CRUD ────────────────────────────────────────────
 function loadAgenda(){
-  setLoading(true,'Memuat agenda...');
+  if(!(window.gasHasCache && gasHasCache('getAgenda',[currentPimpinan]))) setLoading(true,'Memuat agenda...');
   google.script.run
     .withSuccessHandler(function(data){
       agendaData=data||[];
@@ -1972,7 +1999,7 @@ function confirmDeleteAgenda(id, nama){
 
 // ── PENGAJUAN (ADMIN) ──────────────────────────────────────
 function loadPengajuan(){
-  setLoading(true,'Memuat pengajuan...');
+  if(!(window.gasHasCache && gasHasCache('getPengajuan',[currentPimpinan]))) setLoading(true,'Memuat pengajuan...');
   google.script.run
     .withSuccessHandler(function(data){
       pengajuanData=data||[];
