@@ -14,12 +14,12 @@
  *  5. Cache dibuang otomatis setiap ada perubahan data (tulis/login/logout).
  * ============================================================ */
 (function () {
-  var READ = { getAgenda:1, getPengajuan:1, getDashboardData:1, getAkunList:1, getEmailKalender:1,
-               getMyCalendars:1, getCalendarSettings:1, getPimpinanList:1, getModulList:1 };
+  var READ = { getAgenda:1, getPengajuan:1, getDashboardData:1, getAkunList:1,
+               getCalendarSettings:1, getPimpinanList:1, getModulList:1 };
   var WRITE = { addAgenda:1, editAgenda:1, deleteAgenda:1, updateStatusPengajuan:1, saveAkun:1, deleteAkun:1,
-                addEmailKalender:1, deleteEmailKalender:1, setCalendarId:1, syncAllToCalendar:1,
+                setCalendarId:1, syncAllToCalendar:1,
                 submitPengajuan:1, submitBukuTamu:1, login:1, logout:1 };
-  var RETRY = { login:1, resumeSesi:1, warm:1, cekStatusPengajuan:1, getCalendarId:1 };
+  var RETRY = { login:1, resumeSesi:1, warm:1, cekStatusPengajuan:1 };
   for (var k in READ) RETRY[k] = 1;
 
   var PFX = 'gasc1:', MAX_AGE = 10 * 60 * 1000;      // data cache > 10 menit tidak ditampilkan
