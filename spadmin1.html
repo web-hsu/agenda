@@ -569,9 +569,6 @@ label{font-size:.78rem}
       <div class="nav-item" data-page="laporan" onclick="showPage('laporan')">
         <span class="nav-icon">📑</span> Laporan
       </div>
-      <div class="nav-item" data-page="email" onclick="showPage('email')">
-        <span class="nav-icon">📧</span> Email Kalender
-      </div>
       <div class="nav-section" id="nav-section-superadmin" style="display:none">Superadmin</div>
       <div class="nav-item" data-page="akun" id="nav-akun" style="display:none" onclick="showPage('akun')">
         <span class="nav-icon">👥</span> Akun
@@ -679,73 +676,6 @@ label{font-size:.78rem}
                 </thead>
                 <tbody id="tbody-agenda">
                   <tr><td colspan="8"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ─── EMAIL KALENDER ─── -->
-      <div class="page" id="page-email">
-        <div style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
-          <div>
-            <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Email Kalender<span class="pimpinan-context-label" style="color:var(--gold);font-weight:700"></span></h1>
-            <p style="color:var(--gray3);font-size:.85rem">Agenda <strong id="email-pimpinan-name">-</strong> otomatis muncul di Google Calendar email yang ditambahkan</p>
-          </div>
-          <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
-            <select id="email-view" onchange="loadEmailKalender()" style="display:none;width:auto;min-width:190px">
-              <option value="current">Tampilkan: pimpinan terpilih</option>
-              <option value="all">Tampilkan: semua pimpinan</option>
-            </select>
-            <button class="btn btn-gold" onclick="openModalEmail()">➕ Tambah Email</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header"><h2>📧 Daftar Email</h2></div>
-          <div class="card-body" style="padding:0">
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr><th>#</th><th>Email</th><th>Berlaku Untuk</th><th>Keterangan</th><th>Ditambahkan</th><th>Aksi</th></tr>
-                </thead>
-                <tbody id="tbody-email">
-                  <tr><td colspan="6"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <p style="font-size:.78rem;color:var(--gray3);margin-top:1rem;line-height:1.5">
-          Email yang terdaftar akan menerima undangan Google Calendar untuk setiap agenda baru atau yang diedit.
-          Jika email dihapus, ia dikeluarkan dari agenda mendatang; agenda yang sudah lewat tidak diubah.
-        </p>
-      </div>
-
-      <!-- ─── AKUN (khusus superadmin) ─── -->
-      <div class="page" id="page-akun">
-        <div style="margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
-          <div>
-            <h1 style="font-size:1.4rem;color:var(--navy);font-weight:800">Akun</h1>
-            <p style="color:var(--gray3);font-size:.85rem">Kelola akun pengguna dan tentukan modul menu yang dapat diakses</p>
-          </div>
-          <button class="btn btn-gold" onclick="openModalAkun()">➕ Tambah Akun</button>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <h2>👥 Daftar Akun</h2>
-            <input type="text" id="search-akun" placeholder="🔍 Cari akun..."
-              oninput="renderAkunTable()"
-              style="font-size:.82rem;padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:white;width:220px">
-          </div>
-          <div class="card-body" style="padding:0">
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr><th>#</th><th>Username</th><th>Nama Lengkap</th><th>Peran</th><th>Pimpinan</th><th>Modul Menu</th><th>Aksi</th></tr>
-                </thead>
-                <tbody id="tbody-akun">
-                  <tr><td colspan="7"><div class="empty-state"><div class="emoji">⏳</div><p>Memuat...</p></div></td></tr>
                 </tbody>
               </table>
             </div>
@@ -889,84 +819,6 @@ label{font-size:.78rem}
 <!-- ═══════════════════════════════════════════════════════ -->
 <!--  MODALS                                                -->
 <!-- ═══════════════════════════════════════════════════════ -->
-
-<!-- Modal Email Kalender -->
-<div class="modal-overlay" id="modal-email">
-  <div class="modal">
-    <div class="modal-header">
-      <span>➕ Tambah Email Kalender</span>
-      <button class="modal-close" onclick="closeModal('modal-email')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>Alamat Email Google <span class="req">*</span></label>
-          <input type="email" id="email-input" placeholder="nama@gmail.com" autocomplete="off" autocapitalize="none">
-          <span class="form-hint">Gunakan email akun Google agar agenda tampil di Google Calendar-nya.</span>
-        </div>
-        <div class="form-group full" id="email-pimpinan-wrap" style="display:none">
-          <label>Berlaku Untuk <span class="req">*</span></label>
-          <select id="email-pimpinan"></select>
-          <span class="form-hint">Pilih “Semua Pimpinan” agar email ini menerima agenda Bupati, Wakil Bupati, dan Sekda sekaligus.</span>
-        </div>
-        <div class="form-group full">
-          <label>Keterangan</label>
-          <input type="text" id="email-label" placeholder="mis. Ajudan, Protokol, Pimpinan">
-        </div>
-        <div class="form-group full">
-          <label class="modul-chk"><input type="checkbox" id="email-undang" checked> Undang juga ke agenda yang sudah ada (mulai hari ini)</label>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-outline" onclick="closeModal('modal-email')">Batal</button>
-        <button class="btn btn-gold" onclick="saveEmailForm()" id="btn-save-email">💾 Simpan Email</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Akun -->
-<div class="modal-overlay" id="modal-akun">
-  <div class="modal wide">
-    <div class="modal-header">
-      <span id="modal-akun-title">➕ Tambah Akun</span>
-      <button class="modal-close" onclick="closeModal('modal-akun')">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="akun-mode" value="add">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Username <span class="req">*</span></label>
-          <input type="text" id="akun-username" placeholder="mis. AdminKeuangan@2026" autocomplete="off" autocapitalize="none">
-        </div>
-        <div class="form-group">
-          <label>Nama Lengkap <span class="req">*</span></label>
-          <input type="text" id="akun-nama" placeholder="Nama pengguna">
-        </div>
-        <div class="form-group">
-          <label>Peran <span class="req">*</span></label>
-          <select id="akun-role" onchange="onAkunRoleChange()">
-            <option value="admin">Admin</option>
-            <option value="superadmin">Superadmin</option>
-          </select>
-        </div>
-        <div class="form-group full" id="akun-pimpinan-wrap">
-          <label>Pimpinan yang Dilayani <span class="req">*</span></label>
-          <select id="akun-pimpinan"></select>
-        </div>
-        <div class="form-group full">
-          <label>Modul Menu yang Dapat Diakses <span class="req">*</span></label>
-          <div class="modul-grid" id="akun-modul-list"></div>
-          <span class="form-hint" id="akun-modul-hint"></span>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-outline" onclick="closeModal('modal-akun')">Batal</button>
-        <button class="btn btn-gold" onclick="saveAkunForm()" id="btn-save-akun">💾 Simpan Akun</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal Agenda -->
 <div class="modal-overlay" id="modal-agenda">
@@ -1281,116 +1133,11 @@ function setTimePicker(selHId, selMId, val){
   if(selM) selM.value=m;
 }
 
-// ── EMAIL KALENDER ───────────────────────────────────────────
-var emailData = [];
-
-function emailScope(){
-  // Superadmin dapat melihat semua pimpinan sekaligus; lainnya selalu pimpinan sendiri
-  return (isSuperadmin && document.getElementById('email-view').value==='all') ? 'all' : currentPimpinan;
-}
-
-function loadEmailKalender(){
-  document.getElementById('email-view').style.display = isSuperadmin ? '' : 'none';
-  var scope = emailScope();
-  document.getElementById('email-pimpinan-name').textContent = scope==='all' ? 'Semua Pimpinan' : (PIMPINAN_LABELS[currentPimpinan] || '-');
-  if(!scope) return;
-  if(!(window.gasHasCache && gasHasCache('getEmailKalender',[sessionToken, scope]))) setLoading(true,'Memuat email kalender...');
-  google.script.run
-    .withSuccessHandler(function(list){
-      setLoading(false);
-      emailData = list || [];
-      renderEmailTable();
-    })
-    .withFailureHandler(function(e){
-      setLoading(false);
-      showToast('Gagal memuat email: '+escHtml(e && e.message),'error');
-    })
-    .getEmailKalender(sessionToken, scope);
-}
-
-function renderEmailTable(){
-  var tb = document.getElementById('tbody-email');
-  if(!emailData.length){
-    tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="emoji">📧</div><p>Belum ada email. Klik “Tambah Email” untuk menghubungkan agenda ke Google Calendar.</p></div></td></tr>';
-    return;
-  }
-  tb.innerHTML = emailData.map(function(x, i){
-    var semua = x.pimpinan==='all';
-    // Email "Semua Pimpinan" hanya boleh dihapus superadmin
-    var aksi = (semua && !isSuperadmin)
-      ? '<span class="form-hint">Diatur superadmin</span>'
-      : '<button class="btn btn-danger btn-xs" onclick="hapusEmail('+i+')">🗑️ Hapus</button>';
-    return '<tr>'
-      +'<td>'+(i+1)+'</td>'
-      +'<td><strong>'+escHtml(x.email)+'</strong></td>'
-      +'<td><span class="badge '+(semua?'badge-super':'badge-admin')+'">'+escHtml(semua?'Semua Pimpinan':(PIMPINAN_LABELS[x.pimpinan]||x.pimpinanLabel||x.pimpinan))+'</span></td>'
-      +'<td>'+(escHtml(x.label)||'<span style="color:var(--gray3)">—</span>')+'</td>'
-      +'<td>'+escHtml(x.tanggal)+(x.oleh?' <span class="form-hint">oleh '+escHtml(x.oleh)+'</span>':'')+'</td>'
-      +'<td><div class="table-actions">'+aksi+'</div></td>'
-      +'</tr>';
-  }).join('');
-}
-
-function openModalEmail(){
-  document.getElementById('email-input').value = '';
-  document.getElementById('email-label').value = '';
-  document.getElementById('email-undang').checked = true;
-  var wrap = document.getElementById('email-pimpinan-wrap');
-  wrap.style.display = isSuperadmin ? '' : 'none';
-  if(isSuperadmin){
-    var sel = document.getElementById('email-pimpinan');
-    sel.innerHTML = pimpinanList.map(function(p){ return '<option value="'+escHtml(p.key)+'">'+escHtml(p.label)+'</option>'; }).join('')
-      + '<option value="all">Semua Pimpinan</option>';
-    sel.value = emailScope()==='all' ? 'all' : currentPimpinan;
-  }
-  openModal('modal-email');
-  document.getElementById('email-input').focus();
-}
-
-function saveEmailForm(){
-  var email = document.getElementById('email-input').value.trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast('Masukkan alamat email yang valid.','warning'); return; }
-  var pimpinan = isSuperadmin ? document.getElementById('email-pimpinan').value : currentPimpinan;
-  var btn = document.getElementById('btn-save-email');
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-  google.script.run
-    .withSuccessHandler(function(r){
-      btn.disabled = false; btn.innerHTML = '💾 Simpan Email';
-      if(r && r.success){ closeModal('modal-email'); showToast(escHtml(r.message)); loadEmailKalender(); }
-      else showToast(escHtml((r && r.message) || 'Gagal menyimpan email.'),'warning');
-    })
-    .withFailureHandler(function(e){
-      btn.disabled = false; btn.innerHTML = '💾 Simpan Email';
-      showToast('Gagal menyimpan: '+escHtml(e && e.message),'error');
-    })
-    .addEmailKalender(sessionToken, {
-      pimpinan: pimpinan,
-      email: email,
-      label: document.getElementById('email-label').value.trim(),
-      undangSekarang: document.getElementById('email-undang').checked
-    });
-}
-
-function hapusEmail(i){
-  var x = emailData[i]; if(!x) return;
-  var lingkup = x.pimpinan==='all' ? 'agenda mendatang semua pimpinan' : 'agenda mendatang '+(PIMPINAN_LABELS[x.pimpinan]||x.pimpinan);
-  if(!confirm('Hapus email "'+x.email+'"? Email ini juga dikeluarkan dari '+lingkup+'.')) return;
-  setLoading(true,'Menghapus email...');
-  google.script.run
-    .withSuccessHandler(function(r){
-      setLoading(false);
-      if(r && r.success){ showToast(escHtml(r.message)); loadEmailKalender(); }
-      else showToast(escHtml((r && r.message) || 'Gagal menghapus email.'),'warning');
-    })
-    .withFailureHandler(function(e){ setLoading(false); showToast('Gagal menghapus: '+escHtml(e && e.message),'error'); })
-    .deleteEmailKalender(sessionToken, x.pimpinan, x.email);
-}
-
 // ── AKUN & AKSES MODUL MENU ──────────────────────────────────
 var sessionToken    = '';   // token sesi dari server (dipakai untuk fungsi superadmin)
 var currentUsername = '';
 var userModul       = [];   // key modul menu yang boleh diakses akun yang login
-var modulList       = [{key:'dashboard',label:'Dashboard'},{key:'pengajuan',label:'Tamu'},{key:'agenda',label:'Agenda'},{key:'laporan',label:'Laporan'},{key:'email',label:'Email Kalender',default:false}];
+var modulList       = [{key:'dashboard',label:'Dashboard'},{key:'pengajuan',label:'Tamu'},{key:'agenda',label:'Agenda'},{key:'laporan',label:'Laporan'}];
 var akunData        = [];
 
 function escHtml(v){
@@ -1409,7 +1156,7 @@ function applyMenuAccess(){
   document.getElementById('nav-section-superadmin').style.display = isSuperadmin ? '' : 'none';
 }
 function firstAllowedPage(){
-  var order = ['dashboard','pengajuan','agenda','laporan','email','akun'];
+  var order = ['dashboard','pengajuan','agenda','laporan','akun'];
   for(var i=0;i<order.length;i++){ if(canAccessPage(order[i])) return order[i]; }
   return '';
 }
@@ -1683,8 +1430,7 @@ function onPimpinanSwitch(){
   if(p==='dashboard') loadDashboard();
   else if(p==='agenda') loadAgenda();
   else if(p==='pengajuan') loadPengajuan();
-  else if(p==='laporan'){ initLaporanHarian(); loadCalendarSettingsIfVisible(); }
-  else if(p==='email') loadEmailKalender();
+  else if(p==='laporan') initLaporanHarian();
   prefetchMenus();
 }
 
@@ -1696,18 +1442,15 @@ function updatePimpinanPageLabels(){
   });
 }
 
-function loadCalendarSettingsIfVisible(){ /* no-op helper kept for clarity */ }
-
 function doLogout(){
   try{ sessionStorage.removeItem(SESS_KEY); }catch(e){}
   document.getElementById('admin-app').style.display='none';
   document.getElementById('login-page').style.display='';
   document.getElementById('admin-user').value='';
   if(sessionToken){ google.script.run.logout(sessionToken); }
-  sessionToken = ''; currentUsername = ''; userModul = []; akunData = []; emailData = [];
+  sessionToken = ''; currentUsername = ''; userModul = []; akunData = [];
   _dashPrefetch = null; _calLoadedFor = ''; _prefetchedFor = '';
   if(window.gasClearCache) gasClearCache();
-  var ev = document.getElementById('email-view'); if(ev) ev.value = 'current';
   currentPimpinan = ''; currentRole=''; isSuperadmin=false;
 }
 
@@ -1724,7 +1467,6 @@ function showPage(p){
   else if(p==='agenda') loadAgenda();
   else if(p==='pengajuan') loadPengajuan();
   else if(p==='laporan') switchLaporanTab('harian');
-  else if(p==='email') loadEmailKalender();
   else if(p==='akun') loadAkun();
   closeSidebar(); // tutup drawer menu otomatis di mobile setelah memilih halaman
   var mc=document.querySelector('.main-content');
@@ -1788,7 +1530,6 @@ function prefetchMenus(){
     if(canAccessPage('agenda'))    gasPrefetch('getAgenda',[pm]);
     if(canAccessPage('pengajuan')) gasPrefetch('getPengajuan',[pm]);
     if(canAccessPage('akun'))      gasPrefetch('getAkunList',[sessionToken]);
-    if(canAccessPage('email')){ var sc = emailScope(); if(sc) gasPrefetch('getEmailKalender',[sessionToken, sc]); }
   }, 300);
 }
 // Jaga server & cache tetap hangat selama halaman terbuka (Apps Script "tidur" setelah beberapa menit)
