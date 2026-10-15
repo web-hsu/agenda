@@ -690,27 +690,6 @@ label{font-size:.78rem}
           </div>
         </div>
 
-        <!-- Google Calendar Settings -->
-        <div class="card" style="margin-top:1.5rem">
-          <div class="card-header">
-            <h2>📅 Pengaturan Google Calendar</h2>
-            <button class="btn btn-gold btn-sm" onclick="syncSemuaAgenda()" id="btn-sync-all">🔄 Sync Semua Agenda</button>
-          </div>
-          <div class="card-body">
-            <p style="font-size:.85rem;color:var(--gray3);margin-bottom:1rem">
-              Setiap agenda yang ditambah, diedit, atau dihapus akan otomatis tersinkron ke Google Calendar yang dipilih di bawah ini.
-            </p>
-            <div style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap">
-              <div class="form-group" style="flex:1;min-width:200px">
-                <label>Pilih Google Calendar Tujuan</label>
-                <select id="sel-calendar" onchange="simpanCalendarId()">
-                  <option value="primary">⏳ Memuat daftar kalender...</option>
-                </select>
-              </div>
-            </div>
-            <p style="font-size:.78rem;color:var(--gray3);margin-top:.75rem" id="cal-status-text">-</p>
-          </div>
-        </div>
       </div>
 
       <!-- ─── AGENDA ─── -->
@@ -1044,7 +1023,6 @@ var agendaSearch  = '';
 var pjFilter      = 'semua';
 var _loadTimer    = null;
 var _dashPrefetch = null;   // data dashboard yang ikut dikirim bersama respons login
-var _calLoadedFor = '';     // pimpinan yang daftar kalendernya sudah dimuat
 
 // ── MULTI-PIMPINAN ───────────────────────────────────────────
 var currentPimpinan   = '';    // 'bupati' | 'wabup' | 'sekda' | 'all'
@@ -1393,8 +1371,7 @@ function doLogout(){
   resetHub();
   if(sessionToken){ google.script.run.logout(sessionToken); }
   sessionToken = ''; currentUsername = ''; userModul = []; akunData = [];
-  _dashPrefetch = null; _calLoadedFor = '';
-  currentPimpinan = ''; currentRole=''; isSuperadmin=false;
+  _dashPrefetch = null;   currentPimpinan = ''; currentRole=''; isSuperadmin=false;
 }
 
 // ── PAGE NAVIGATION ────────────────────────────────────────
@@ -1456,8 +1433,6 @@ function renderDashboard(res){
         console.error('Pengajuan render error:',e);
         showToast('Error render pengajuan: '+e.message,'warning');
       }
-      // Pengaturan kalender dimuat SETELAH data utama tampil (tidak menghambat)
-      loadCalendarSettings();
 }
 
 function loadDashboard(){
@@ -2429,86 +2404,6 @@ function exportExcelLaporanBulanan(){
     btn.disabled=false; btn.innerHTML=origHtml;
   }
 }
-
-// ════════════════════════════════════════════════════════════
-// ── GOOGLE CALENDAR (UI) ─────────────────────────────────────
-// ════════════════════════════════════════════════════════════
-
-var _calendarIdSaved = '';
-
-function loadCalendarSettings(){
-  var pg  = document.getElementById('page-dashboard');
-  var sel = document.getElementById('sel-calendar');
-  var txt = document.getElementById('cal-status-text');
-  if(!sel || !pg || !pg.classList.contains('active')) return; // kartu ini hanya ada di Dashboard
-  if(_calLoadedFor === currentPimpinan) return;                // sudah dimuat, tidak perlu panggilan server lagi
-  var _calFor = currentPimpinan;
-  sel.innerHTML = '<option value="">⏳ Memuat...</option>';
-
-  google.script.run
-    .withSuccessHandler(function(r){
-      var cals = (r && r.calendars) || [];
-      sel.innerHTML = '';
-      if(!cals.length){
-        sel.innerHTML = '<option value="primary">📅 Kalender Utama (primary)</option>';
-        txt.textContent = 'Tidak ada kalender lain yang ditemukan.';
-        return;
-      }
-      cals.forEach(function(c){
-        var opt = document.createElement('option');
-        opt.value = c.id;
-        opt.text  = c.name + (c.id==='primary'||c.name==='primary' ? ' (Utama)' : '');
-        sel.appendChild(opt);
-      });
-      _calendarIdSaved = (r && r.currentId) || 'primary';
-      _calLoadedFor = _calFor;
-      sel.value = _calendarIdSaved;
-      if(!sel.value && sel.options.length) sel.selectedIndex=0;
-      txt.textContent = '✅ Tersinkron ke: ' + (sel.options[sel.selectedIndex]||{text:'-'}).text;
-    })
-    .withFailureHandler(function(){
-      sel.innerHTML = '<option value="primary">📅 Kalender Utama (primary)</option>';
-      txt.textContent = '⚠️ Gagal memuat daftar kalender.';
-    })
-    .getCalendarSettings(currentPimpinan);
-}
-
-function simpanCalendarId(){
-  var sel = document.getElementById('sel-calendar');
-  var txt = document.getElementById('cal-status-text');
-  if(!sel||!sel.value) return;
-  txt.textContent = '⏳ Menyimpan...';
-  google.script.run
-    .withSuccessHandler(function(r){
-      _calendarIdSaved = sel.value;
-      txt.textContent  = '✅ Tersimpan — Tersinkron ke: ' + sel.options[sel.selectedIndex].text;
-      showToast('Pengaturan kalender berhasil disimpan!');
-    })
-    .withFailureHandler(function(){
-      txt.textContent = '❌ Gagal menyimpan.';
-      showToast('Gagal menyimpan pengaturan kalender.','error');
-    })
-    .setCalendarId(currentPimpinan, sel.value);
-}
-
-function syncSemuaAgenda(){
-  var btn=document.getElementById('btn-sync-all');
-  var origHtml=btn.innerHTML;
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Menyinkronkan...';
-  setLoading(true,'Menyinkronkan ke Google Calendar...');
-
-  google.script.run
-    .withSuccessHandler(function(r){
-      btn.disabled=false; btn.innerHTML=origHtml; setLoading(false);
-      showToast(r.message);
-    })
-    .withFailureHandler(function(e){
-      btn.disabled=false; btn.innerHTML=origHtml; setLoading(false);
-      showToast('Gagal sinkronisasi: '+(e.message||''),'error');
-    })
-    .syncAllToCalendar(currentPimpinan);
-}
-
 
 // Fokus otomatis ke kolom username saat halaman admin dibuka
 
